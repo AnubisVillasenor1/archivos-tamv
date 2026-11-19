@@ -1,0 +1,3088 @@
+diff --git a/README.md b/README.md
+index 9297be6..ce09ab6 100644
+--- a/README.md
++++ b/README.md
+@@ -1,10 +1,45 @@
+-# Isabella Villaseñor AI Génesis Ω∞ — TAMV ONLINE
+-
+-Isabella es un **Runtime Web Operativo y Sistema Federado de Inteligencia Artificial Gobernada (FGAIS)** construido, propiedad y creado por **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)** bajo la marca **TAMV ONLINE ENTERPRISE**. No es un chatbot: es un runtime con gobernanza determinista, memoria jerárquica, un motor de inferencia propio que **orquesta** LLM externos (no es un modelo fundacional entrenado por TAMV), RAG soberano, herramientas allowlisted, habilidades ejecutables, auditoría criptográfica y —desde esta versión— un sistema nativo de análisis audio-espectral en tiempo real: el **TAMV Kaos Audio System**.
+-
+-> Estado del repositorio: `draft | engine-generated` hasta revisión humana nominal. No se declara conciencia, autonomía jurídica ni autoridad propia.
++# Isabella Villaseñor AI Génesis Ω∞ — TAMV ONLINE NETWORK
++
++Runtime web operativo y **Sistema Federado de Inteligencia Artificial Gobernada (FGAIS)**,
++creado, propiedad y construido por **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)** bajo la
++red **TAMV ONLINE NETWORK** (entidad legal titular: **TAMV ONLINE ENTERPRISE**). Nodo Cero:
++Real del Monte, Hidalgo, México. ORCID `0009-0008-5050-1539` · ISNI `0000-0005-3169-9229`.
++
++Isabella **no es un chatbot ni un modelo fundacional entrenado por TAMV**: es un runtime con
++gobernanza determinista, memoria jerárquica, un motor de inferencia propio que **orquesta** LLM
++externos, RAG soberano, herramientas allowlisted, habilidades ejecutables, auditoría
++criptográfica y dos motores de audio nativos escritos en TypeScript dentro de este repositorio:
++el **TAMV Kaos Audio System** (análisis audio-espectral) y —nuevo en esta actualización— el
++**TAMV Music Genesis** (composición determinista, sonoridad LUFS y mastering WAV reales).
++
++> Estado del repositorio: `draft | engine-generated` hasta revisión humana nominal. No se
++> declara conciencia, autonomía jurídica ni autoridad propia.
+ >
+-> Propiedad y uso: ver [`LICENSE`](LICENSE) y [`NOTICE`](NOTICE.md). La licencia publicada es **propietaria, con todos los derechos reservados**: clonar o leer el repositorio no autoriza ningún uso, y en ningún caso se transfieren la marca, la identidad territorial ni el diseño del Kaos Audio System.
++> Propiedad y uso: ver [`LICENSE`](LICENSE) y [`NOTICE`](NOTICE.md). La licencia publicada es
++> **propietaria, con todos los derechos reservados**: clonar o leer el repositorio no autoriza
++> ningún uso, y en ningún caso se transfieren la marca, la identidad territorial ni el diseño
++> del Kaos Audio System o del Music Genesis.
++
++## Qué surge tras la actualización masiva
++
++Esta versión unifica el material de especificación «ISABELLA CERO v2.0» con el runtime real y
++añade una capacidad nativa nueva, verificada de extremo a extremo:
++
++1. **TAMV Music Genesis** — el motor de música del ecosistema TAMV (`play-and-go`) portado a
++   TypeScript nativo en [`src/music/`](src/music/) y cableado en
++   [`src/routes/music.ts`](src/routes/music.ts): compone **MIDI real**, mide **LUFS BS.1770-4**
++   y **masteriza WAV real**, bajo 8 rutas gobernadas con evidencia BookPI. **7 archivos de
++   prueba, 64 casos verdes.**
++2. **Arranque real demostrado** — `build:dist` limpio y `smoke:runtime` en exit 0: el servidor
++   construido sirve `/health`, conversa con fallback soberano, media con gobernanza CROWN y
++   bloquea fail-closed entradas abusivas y proveedores de pago (0 llamadas externas). Ver
++   [Arranque real verificado](#arranque-real-verificado).
++3. **Inventario reconciliado** — de 336 a **344 rutas** congeladas (las 8 de música, ninguna
++   perdida ni renombrada).
++4. **Unificación honesta de v2.0** — lo que coincide con el código se adopta (14 capas Ω,
++   constitución CROWN, 10 skills nativas, Terminus Blackout); lo que diverge se archiva, no se
++   infla. Ver [Unificación v2.0](#unificación-v20-adopción-y-divergencias) y el registro
++   [`DIVERGENCIAS-2026-11-12.md`](docs/history/archive/DIVERGENCIAS-2026-11-12.md).
+ 
+ ## Contrato de evidencia
+ 
+@@ -15,148 +50,247 @@ SPECIFIED ≠ IMPLEMENTED ≠ TESTED ≠ PRODUCTION
+ CAPABILITY ≠ AUTHORITY ≠ EXECUTION ≠ EVIDENCE
+ ```
+ 
+-Ningún documento, tabla o respuesta de API puede elevar una categoría a otra. El inventario de rutas (`docs/api/route-inventory.json`), el canon Ω∞ (`src/platform/omega-canon.ts`) y el mapa de integración TAMV (`src/territory/tamv-integration.ts`) declaran la madurez real de cada capacidad, y hay pruebas que fallan si una cifra inventada reaparece.
++Ningún documento, tabla o respuesta de API puede elevar una categoría a otra. El inventario de
++rutas ([`docs/api/route-inventory.json`](docs/api/route-inventory.json)), el canon Ω∞
++([`src/platform/omega-canon.ts`](src/platform/omega-canon.ts)) y el mapa de integración TAMV
++([`src/territory/tamv-integration.ts`](src/territory/tamv-integration.ts)) declaran la madurez
++real de cada capacidad, y hay pruebas que fallan si una cifra inventada reaparece.
+ 
+-## TAMV Kaos Audio System
++## Arranque real verificado
+ 
+-Innovación nativa: DSP de audio escrito en TypeScript dentro de este repositorio, sin dependencias nativas, sin WASM y sin servicio externo. Mide la señal que el cliente envía y deriva presets y planes. **No reproduce, no sintetiza, no separa fuentes.**
++El runtime es un servidor Express 5 + TypeScript ESM sobre **Node 24.x** con **pnpm@10.28.0**
++(no bun). Escucha en `PORT` (por defecto **8080**). El contrato completo de variables está en
++[`.env.example`](.env.example).
+ 
+-### Qué calcula de verdad
++```bash
++corepack pnpm install --frozen-lockfile
++cp .env.example .env.development.local   # sustituye cada <...>; nunca comitees credenciales
++corepack pnpm run dev                    # tsx src/server.ts → http://localhost:8080
++```
+ 
+-- **FFT radix-2 Cooley–Tukey in-place** sobre ventana de Hann simétrica; `DEFAULT_FFT_SIZE = 2048`, `DEFAULT_HOP_SIZE = 512`, promedio tipo Welch.
+-- **Centroide espectral**, **flatness** (razón geométrica/aritmética de magnitudes) y **energía por banda**: grave `0–250 Hz`, medio `250–2000 Hz`, agudo `2000 Hz–Nyquist`, banda de voz `300–3400 Hz`.
+-- **Transitorios por flujo espectral relativo**: cada avance normalizado por la energía de los dos cuadros involucrados; el umbral es `media + 2.5·σ` con un suelo de `0.08` y separación mínima de 40 ms. Sin este detalle los onsets se contaban sobre ruido de piso.
+-- **Estéreo M/S como proporción** `side / (mid + side)`: una señal en contrafase ya no colapsa a cero.
+-- **Niveles medidos**: pico y RMS en dBFS, factor de cresta, rango dinámico, proporción de silencio, latencia de análisis del request.
+-- **Perfil emocional y complejidad espacial** por ponderaciones visibles (documentadas en `src/tamv/analysis.ts`), no por un modelo entrenado.
++Para probar el artefacto que se despliega (bundle esbuild, no el fuente):
+ 
+-### Qué declara y qué se niega a fingir
++```bash
++corepack pnpm run build:dist             # tsc + esbuild → dist/server.js + node --check UI
++corepack pnpm run smoke:runtime          # node scripts/runtime-smoke.mjs contra dist/server.js
++```
+ 
+-- 11 presets de fábrica con `processingChain` ordenada y matriz acústica interpretable (entorno × contenido × emoción × complejidad espacial × intensidad háptica).
+-- Preset adaptativo determinista: el mismo WAV produce el mismo `adaptive_<sha12>`.
+-- Plan de redefinición de **8 etapas** con **15 puertas de validación colgadas**; **7 etapas son reversiblemente recuperables** y todas nacen en estado `declared` con `audioRendered: false`.
+-- Monitor de telemetría con **10 lecturas**: las 4 de hardware (temperatura de CPU, uso de GPU, error de sincronía háptica, precisión espacial) se devuelven como `measured: false` con su motivo; de las 6 restantes se calculan 6 en material estéreo y 5 en mono —en mono no existe el par de canales que correlacionar— (invariante `CAPABILITY ≠ AUTHORITY ≠ EXECUTION ≠ EVIDENCE`).
++**Evidencia medida en esta versión** (Node real v24.18.0, `main` HEAD `6b9d847`):
++
++| Sonda | Resultado |
++|---|---|
++| `build:dist` (`tsc -p tsconfig.build.json` + esbuild + `node --check src/ui/app.js`) | exit 0, sin errores; `dist/server.js` generado |
++| `smoke:runtime` → `LOCAL_CONVERSATION_SMOKE_OK` | `/health` 200, chat 200, follow-up 200, motor `local-fast-lane` (fallback soberano) |
++| `smoke:runtime` → `ISABELLA_MEDIATION_SMOKE_OK` | benigno admitido; destructivo `HUMAN_APPROVAL_REQUIRED` (403); vacío 400 |
++| `smoke:runtime` → `PUBLIC_API_GUARDRAILS_OK` | vacío 400, sobredimensionado 413, memoria privada sin scope 403, destructivo 403 |
++| `smoke:runtime` → `PAID_PROVIDER_OPT_IN_GUARD_OK` / `OPEN_SCIENCE_PAID_ISOLATION_OK` | **0 llamadas a proveedores externos** sin opt-in de pago |
++| `smoke:runtime` → `MULTIMODAL_SPEECH_GUARDRAILS_OK` | fail-closed (visión 0, imagen 0, tts false) |
++| Suite Music Genesis (`vitest run test/music test/routes/music.test.ts`) | **7 archivos, 64 casos, todos verdes** |
++
++Un 200 y un exit 0 demuestran que el artefacto **arranca, sirve y gobierna**; no demuestran
++autoridad, ni producción certificada, ni que los [gates de liberación](#gates-pendientes-para-liberar)
++estén cerrados.
++
++> **Caveat ambiental honesto:** el binario de Node de esta máquina **no ofrece `sha3-512` ni
++> `sha3-256`** (`crypto.getHashes()` medido `false`). El sello durable de BookPI y las pruebas
++> que lo exigen no corren aquí; requieren un Node con OpenSSL SHA3 (CI). El smoke prueba
++> arranque HTTP + gobernanza + conversación, **no** el sello criptográfico durable. Esto explica
++> los fallos ambientales de la suite completa (ver [Estado real del CI](#estado-real-del-ci)).
++
++## TAMV Music Genesis
++
++Innovación nativa de esta actualización: composición y mastering escritos en TypeScript dentro
++del repositorio, sin dependencias nativas, sin WASM y sin servicio externo para la vía local.
++**Compone bytes MIDI reales y masteriza bytes WAV reales**; la generación con proveedores
++externos es opcional y **fail-closed** sin credenciales. No reproduce sonido en tiempo real ni
++entrena un modelo de audio.
++
++### Qué calcula y produce de verdad
++
++- **Composición determinista sembrada**: la misma semilla produce el mismo arreglo. Teoría
++  musical real (tonalidad, acordes, secciones contiguas), **≥20 géneros**, humanize acotado.
++- **MIDI format 1 real** ([`src/music/midi.ts`](src/music/midi.ts)): cabecera `MThd`, división
++  480 ticks/beat, pistas `MTrk` con conductor + instrumentos + drums, cada una terminada en
++  `FF 2F 00`; meta de tempo `FF 51 03`. La ruta `compose` entrega el archivo (`midiRendered: true`).
++- **Sonoridad LUFS integrada BS.1770-4** ([`src/music/dsp.ts`](src/music/dsp.ts)): ponderación K
++  (shelf + highpass), bloques de 400 ms con 75 % de solapamiento, puerta absoluta −70 y relativa
++  −10; silencio o señal < 400 ms devuelven `-Infinity` (no se inventa loudness). **True-peak** con
++  sobremuestreo 4×; pico/RMS en dBFS, factor de cresta, muestras clipeadas y offset DC.
++- **Mastering real** (`masterBuffer`): ganancia hacia el target LUFS (techo `MAX_GAIN_DB` 18),
++  limitador con ceiling −1.2 dBTP, anchura estéreo, saturación y compresión declaradas, fade de
++  bordes; codifica **WAV PCM 16 / 24 / float32** (`encodeWav`). La ruta `master` entrega el
++  archivo (`audioRendered: true`, estado `RENDERED_NOT_EXECUTED`).
++- **Plan local determinista** (`createLocalPlan`): heurísticas léxicas de género/tempo/
++  instrumentos; sin `OLLAMA_BASE_URL` cae al agente de reglas local. **Limitación documentada y
++  probada**: la heurística de tonalidad puede colisionar con artículos en español (p. ej. «a»
++  antes de «120 bpm»); el test lo fija como comportamiento real, no se disimula.
++- **Generación externa opcional** (`generate`, asíncrona): proveedores local/fal/replicate/
++  huggingface/suno; sin credenciales responde **503 `MUSIC_PROVIDER_NOT_CONFIGURED`**. El
++  registro de tareas vive en **memoria del proceso** (MVP,
++  [`task-store.ts`](src/music/task-store.ts)) y desaparece al reiniciar: nunca es la copia durable
++  del audio.
+ 
+ ### Gobernanza de la superficie
+ 
+ | Control | Valor real |
+ |---|---|
+-| Prefijo | `/api/v1/tamv` |
++| Prefijo | `/api/v1/music` |
+ | Autorización POST | `GENESIS_ADMIN_API_TOKEN` vía `authorizeApiToken` (401 cerrado sin credencial) |
+ | Rate limit | ventana fija de 8 requests / 60 s por bucket y cliente |
+-| Ledger de evidencia | cada llamada appendea a BookPI su `methodId` `A.TWINS.E07_TAMV.*` |
+-| Blackout | alcance `VOICE_SYNTHESIS` en `src/governance/blackout.ts` |
+-| Escenario de riesgo | `NEGLIGIBLE` (lectura), `LOW` (análisis/preset), `MEDIUM` (plan de redefinición) |
+-| Cotas de entrada | 180 000 bytes crudos, mínimo 2048 muestras por canal, duración máxima 180 000 ms |
+-| Contenedor | WAV PCM 16; `audio/mpeg`, `audio/flac`, `audio/ogg`, `audio/mp4`, `audio/webm` se rechazan con código explícito |
++| Ledger de evidencia | cada llamada appendea a BookPI su `methodId` `A.TWINS.E21_MUSIC.*` |
++| Riesgo (methodId) | `NEGLIGIBLE` (status/genres/task), `LOW` (plan/compose/analyze), `MEDIUM` (master/generate) |
++| Cotas de audio | 180 000 bytes, mínimo 2048 frames por canal, duración máxima 180 000 ms (alineadas con Kaos) |
++| Cota de prompt | 1200 caracteres |
++| Semántica de ejecución | compone/mide bytes dentro del runtime; `authorizationPerformed: false`, `executionPerformed: false` (no ejecuta acciones externas ni concede autoridad) |
+ 
+ ```text
+-GET  /api/v1/tamv/status
+-GET  /api/v1/tamv/presets
+-GET  /api/v1/tamv/presets/:presetId
+-POST /api/v1/tamv/analyze
+-POST /api/v1/tamv/adaptive-preset
+-POST /api/v1/tamv/redefine-plan
++GET  /api/v1/music/status            GET  /api/v1/music/genres
++GET  /api/v1/music/tasks/:taskId     POST /api/v1/music/plan        (asíncrona)
++POST /api/v1/music/compose           POST /api/v1/music/analyze
++POST /api/v1/music/master            POST /api/v1/music/generate    (asíncrona, fail-closed)
+ ```
+ 
+-Un rechazo 400 devuelve el motivo exacto (`TAMV_PAYLOAD_EMPTY`, `TAMV_BASE64_INVALID`, `TAMV_MIME_UNSUPPORTED`, `TAMV_PAYLOAD_TOO_LARGE`, `TAMV_WAV_UNDECODEABLE`, `TAMV_SIGNAL_TOO_SHORT`, `TAMV_DURATION_TOO_LONG`): "no es WAV" y "está vacío" no son el mismo error.
+-
+ ### Limitaciones del motor (no negociables en el texto)
+ 
+-- No hay reproducción en tiempo real: el motor mide y declara, no emite sonido.
+-- No hay separación de fuentes ejecutada; `source_separation` es un objetivo para un motor externo.
+-- No hay HRTF ni render binaural/ambisonic: `width`/`height`/`depth` son parámetros declarados.
+-- No hay medidor LUFS: la puerta de sonoridad usa RMS medido, que no es loudness percibida EBU R128.
+-- El clasificador es un conjunto de ponderaciones visibles; `confidence` no es probabilidad calibrada.
+-- Sin actuador háptico conectado: el patrón háptico es metadata para un dispositivo cliente.
++- No hay reproducción en tiempo real: compone MIDI y masteriza WAV, no emite sonido.
++- No hay un modelo de audio entrenado propio: la generación neuronal es un proveedor externo
++  opcional, fail-closed sin credenciales.
++- No separa fuentes ni clona voz.
++- El plan local usa heurísticas léxicas visibles; la tonalidad en español tiene una limitación
++  documentada (arriba), no es un parser musical completo.
++- El almacenamiento de tareas es en memoria del proceso; la durabilidad del audio es
++  responsabilidad del proveedor/almacén externo, no de este registro.
+ 
+-## Categorización del sistema
++## TAMV Kaos Audio System
+ 
+-| Categoría | Descripción | Módulos clave |
+-|---|---|---|
+-| **Kaos Audio System** | DSP espectral nativo, presets, preset adaptativo y plan de redefinición gobernado | `src/tamv/`, `src/routes/tamv.ts` |
+-| **Runtime & HTTP** | Servidor Express/TypeScript, rutas, rate limiting, hardening | `src/server.ts`, `src/http/`, `src/routes/` |
+-| **LLM Fundacional** | Orquestación de proveedores (HF, Ollama, Gratis, AI SDK Gateway) + fallback soberano | `src/inference/foundational-llm.ts`, `src/inference/free-providers.ts`, `src/inference/router.ts` |
+-| **RAG Soberano** | Embeddings deterministas + búsqueda por similitud coseno | `src/inference/rag.ts`, `src/inference/embeddings.ts` |
+-| **Memoria** | 5 niveles (immediate, session, project, territorial, historical) + IKES | `src/memory/hierarchical.ts`, `src/memory/ikes.ts` |
+-| **Gobernanza** | CROWN, AEGIS, Policy Gate, Zero Trust, Prompt Guard, blackout Terminus | `src/genesis/`, `src/security/`, `src/governance/` |
+-| **Evidencia** | Ledger BookPI con sello Ed25519 y canonicalización JCS (RFC 8785) | `src/governance/`, `src/ivcc/` |
+-| **Ciberseguridad** | Threat intel, JCS, fetchSafeUpstream, advanced threat intel | `src/security/advanced-threat-intel.ts`, `src/security/jcs.ts`, `src/security/fetch-safe.ts` |
+-| **Voz/IVCC** | IVCC, consentimiento, perfiles de voz, watermark | `src/ivcc/`, `src/routes/ivcc.ts`, `src/routes/tts.ts` |
+-| **Economía** | SCER, dynamic pricing, Profit Guard, tesorería, afiliados, fraude | `src/economy/`, `src/commerce/` |
+-| **Territorio** | Identidad e integración TAMV (MSR, MDD, DreamSpaces, Blindajes, Kaos Audio) | `src/territory/` |
+-| **Canon Ω∞** | Registro canónico de pilares, capas, implementaciones y madurez | `src/platform/omega-canon.ts`, `src/platform/catalog.ts` |
+-| **Integraciones** | MCP, dominios Vercel, Hugging Face Hub, malla federada TAMV | `src/infra/vercel-domains.ts`, `src/federation/`, `/api/mcp` |
+-| **Nexus** | Grafo con procedencia, agente con evidencia, workflows DAG, antifragilidad, cuántica local | `src/nexus/`, `src/routes/nexus.ts` |
++DSP de audio espectral nativo, sin dependencias nativas, sin WASM y sin servicio externo. Mide
++la señal que el cliente envía y deriva presets y planes. **No reproduce, no sintetiza, no separa
++fuentes.** (El medidor LUFS BS.1770-4 vive en Music Genesis; Kaos usa RMS medido, que no es
++loudness percibida EBU R128.)
+ 
+-## Motor de inferencia propio (orquestación, no modelo fundacional)
++### Qué calcula de verdad
+ 
+-`src/inference/foundational-llm.ts` orquesta proveedores open source/free (Hugging Face, Ollama, Gratis, AI SDK Gateway), inyecta memoria conversacional e historial, recupera contexto verificado (RAG + verified knowledge), garantiza respuesta con fallback soberano y cachea 60 s. El fallback determinista local **se declara como fallback**: nunca se presenta como inferencia de modelo.
++- **FFT radix-2 Cooley–Tukey in-place** sobre ventana de Hann simétrica; `DEFAULT_FFT_SIZE =
++  2048`, `DEFAULT_HOP_SIZE = 512`, promedio tipo Welch.
++- **Centroide espectral**, **flatness** y **energía por banda**: grave `0–250 Hz`, medio
++  `250–2000 Hz`, agudo `2000 Hz–Nyquist`, banda de voz `300–3400 Hz`.
++- **Transitorios por flujo espectral relativo**: umbral `media + 2.5·σ`, suelo `0.08`,
++  separación mínima 40 ms.
++- **Estéreo M/S como proporción** `side / (mid + side)`: una señal en contrafase no colapsa a cero.
++- **Niveles medidos**: pico y RMS en dBFS, factor de cresta, rango dinámico, proporción de
++  silencio, latencia de análisis.
++- **Perfil emocional y complejidad espacial** por ponderaciones visibles
++  ([`src/tamv/analysis.ts`](src/tamv/analysis.ts)), no por un modelo entrenado.
+ 
+-## Herramientas y skills
++### Qué declara y qué se niega a fingir
++
++- 11 presets de fábrica con `processingChain` ordenada y matriz acústica interpretable.
++- Preset adaptativo determinista: el mismo WAV produce el mismo `adaptive_<sha12>`.
++- Plan de redefinición de **8 etapas** con **15 puertas de validación colgadas**; **7 etapas
++  reversiblemente recuperables**, todas nacen en `declared` con `audioRendered: false`.
++- Monitor de telemetría con **10 lecturas**: las 4 de hardware se devuelven `measured: false`
++  con su motivo; de las 6 restantes se calculan 6 en estéreo y 5 en mono.
++
++### Gobernanza de la superficie
+ 
+-- `IsabellaEngine` con 9 primitivas: `observe`, `pick`, `place`, `move`, `rotate`, `handover`, `release`, `wait`, `verify`.
+-- Fallback de 4 niveles: `PROGRAM → ACTION_CHUNK → HUMAN_REVIEW → DEGRADED`.
+-- Habilidades de alto impacto siempre terminan en `HUMAN_REVIEW`.
+-- Catálogo gobernado de herramientas registrado en `src/tools/catalog.ts`; cada ejecución deja evidencia en BookPI antes de que su salida llegue al llamador.
++| Control | Valor real |
++|---|---|
++| Prefijo | `/api/v1/tamv` |
++| Autorización POST | `GENESIS_ADMIN_API_TOKEN` (401 cerrado) |
++| Rate limit | 8 requests / 60 s |
++| Ledger | `methodId` `A.TWINS.E07_TAMV.*` en BookPI |
++| Blackout | alcance `VOICE_SYNTHESIS` |
++| Riesgo | `NEGLIGIBLE` (lectura), `LOW` (análisis/preset), `MEDIUM` (plan) |
++| Cotas | 180 000 bytes, 2048 muestras/canal, 180 000 ms; WAV PCM 16; otros MIME rechazados con código explícito |
++
++```text
++GET  /api/v1/tamv/status             GET  /api/v1/tamv/presets
++GET  /api/v1/tamv/presets/:presetId  POST /api/v1/tamv/analyze
++POST /api/v1/tamv/adaptive-preset    POST /api/v1/tamv/redefine-plan
++```
++
++Rechazos 400 con motivo exacto (`TAMV_PAYLOAD_EMPTY`, `TAMV_BASE64_INVALID`,
++`TAMV_MIME_UNSUPPORTED`, `TAMV_PAYLOAD_TOO_LARGE`, `TAMV_WAV_UNDECODEABLE`,
++`TAMV_SIGNAL_TOO_SHORT`, `TAMV_DURATION_TOO_LONG`). Limitaciones: sin reproducción, sin
++separación de fuentes ejecutada, sin HRTF/binaural, sin LUFS (usa RMS), clasificador de
++ponderaciones visibles (no probabilidad calibrada), háptico solo metadata.
++
++## Motor de inferencia propio (orquestación, no modelo fundacional)
++
++[`src/inference/foundational-llm.ts`](src/inference/foundational-llm.ts) orquesta proveedores
++open source/free (Hugging Face, Ollama, Gratis, AI SDK Gateway), inyecta memoria conversacional
++e historial, recupera contexto verificado (RAG + verified knowledge), garantiza respuesta con
++fallback soberano y cachea 60 s. El fallback determinista local **se declara como fallback**:
++nunca se presenta como inferencia de modelo. Los proveedores de pago quedan aislados tras
++`ALLOW_PAID_PROVIDER_FALLBACK` (el smoke midió **0 llamadas externas** sin opt-in).
+ 
+ ## Agent Mesh ISABELLA CERO (fusión 2026-11-01)
+ 
+-La fusión con `AnubisVillasenor1/proyecto-isabella-cero` incorpora la matriz de **10 roles** del canon CERO (`planner`, `researcher`, `architect`, `coder`, `tester`, `reviewer`, `security`, `devops`, `creative`, `operator`) y su política `ALLOW / DENY / ESCALATE`. El código es original y endurecido; los documentos canónicos se conservan con SHA-256 en [`docs/canon/`](docs/canon/README.md) y el dictamen completo está en [`docs/rfc/RFC-0011-fusion-isabella-cero.md`](docs/rfc/RFC-0011-fusion-isabella-cero.md).
++Matriz de **10 roles** del canon CERO (`planner`, `researcher`, `architect`, `coder`, `tester`,
++`reviewer`, `security`, `devops`, `creative`, `operator`) con política `ALLOW / DENY / ESCALATE`.
++Código original y endurecido; documentos canónicos conservados con SHA-256 en
++[`docs/canon/`](docs/canon/README.md); dictamen en
++[`RFC-0011`](docs/rfc/RFC-0011-fusion-isabella-cero.md).
+ 
+ | Componente | Qué hace de verdad | Qué no hace |
+ |---|---|---|
+-| **Matriz de roles** | Cada rol declara scopes, techo de riesgo y si opera solo en sandbox | No concede autoridad: un `ALLOW` no autoriza ejecución |
+-| **Evaluación de política** | `DENY` por scope faltante, `ESCALATE` por riesgo o acción crítica | No lee la aprobación del cuerpo HTTP; exige bearer verificado |
+-| **Orquestador** | Ejecuta solo adaptadores registrados, con concurrencia y timeout acotados | Sin adaptador devuelve `NO_ADAPTER`; no simula trabajo |
+-| **Evidencia** | Sella cada decisión en BookPI (`agent.mesh.*`) | No sustituye el ledger durable ni eleva `readyz` |
+-| **Sandbox** | Contención con `path.relative`, rechazo de `..`, absolutas, NUL y symlinks; SHA3-512 | No aplica parches ni escribe en producción |
+-| **Planner / Reviewer** | Descomposición determinista de objetivos y revisión de hallazgos | No usan modelo, red ni shell |
++| Matriz de roles | Declara scopes, techo de riesgo y sandbox por rol | No concede autoridad: un `ALLOW` no autoriza ejecución |
++| Evaluación de política | `DENY` por scope faltante, `ESCALATE` por riesgo/acción crítica | No lee aprobación del cuerpo HTTP; exige bearer verificado |
++| Orquestador | Ejecuta solo adaptadores registrados, concurrencia y timeout acotados | Sin adaptador devuelve `NO_ADAPTER`; no simula trabajo |
++| Evidencia | Sella cada decisión en BookPI (`agent.mesh.*`) | No sustituye el ledger durable ni eleva `readyz` |
++| Sandbox | Contención `path.relative`, rechazo de `..`/absolutas/NUL/symlinks; SHA3-512 | No aplica parches ni escribe en producción |
+ 
+ ```text
+-GET  /api/v1/agents/mesh              catálogo de roles y adaptadores
+-POST /api/v1/agents/mesh/evaluate     evalúa política; no autoriza ni ejecuta
++GET  /api/v1/agents/mesh           POST /api/v1/agents/mesh/evaluate
+ ```
+ 
+-`executionPerformed` es siempre `false`. Coder, Tester, DevOps y Operator permanecen `SPECIFIED`: no tienen adaptador de ejecución registrado. La maqueta Next.js del repositorio de origen **no** se importó porque su chat y su editor son simulados; el detalle y la auditoría están en el RFC-0011.
++`executionPerformed` siempre `false`. Coder, Tester, DevOps y Operator permanecen `SPECIFIED`
++(sin adaptador de ejecución). La maqueta Next.js del repo de origen no se importó (chat y editor
++simulados).
+ 
+ ## Master Consolidated (fusión 2026-11-01)
+ 
+-La fusión del documento `ISABELLA_VILLASENOR_AI_MASTER_CONSOLIDATED.docx` vive en `src/infinity/`. Registra las **14 capas Ω** y los **9 Fabrics**, evalúa la constitución `ALLOW = IDENTITY × AUTHORITY × POLICY × EVIDENCE × SAFETY`, ejecuta **10 skills nativas deterministas** y expone Media, Build y Evolution Fabric **sin ejecutar acciones externas**.
++Vive en [`src/infinity/`](src/infinity/). Registra las **14 capas Ω** y los **9 Fabrics** (puerta
++dura en [`architecture.ts:352`](src/infinity/architecture.ts#L352) y
++[`:359`](src/infinity/architecture.ts#L359): la auditoría falla si alguien declara `production`
++o cambia el conteo), evalúa la constitución `ALLOW = IDENTITY × AUTHORITY × POLICY × EVIDENCE ×
++SAFETY`, ejecuta **10 skills nativas deterministas** y expone Media, Build y Evolution Fabric
++**sin ejecutar acciones externas**.
+ 
+ | Componente | Qué hace de verdad | Qué no hace |
+ |---|---|---|
+-| **Arquitectura** | Registra 14 capas Ω y 9 Fabrics con módulo y evidencia; la auditoría falla si alguien declara `production` | No convierte una capa especificada en implementada |
+-| **Catálogo** | 10 skills, 18 tools, 14 primitivas y 12 servicios con madurez y evidencia | No acredita las tools `mapped` ni el 20× |
+-| **Constitución** | `ALLOW/DENY`, ingesta de 14 etapas, licencias y trust asesor | `ALLOW` no autoriza, no ejecuta y no sustituye CROWN |
+-| **Skills** | Investigación léxica, bibliometría, legal, open science, gobernanza, prompt, multimodal, música y voz | No buscan en red, no sintetizan audio ni clonan voz |
+-| **Media Fabric** | Culling, estilo, retoque, galería, cotización y agrupación de embeddings | No modifica píxeles, no detecta caras, no publica ni cobra |
+-| **Build Fabric** | Plan de workspace, sandbox, preview y deploy con allowlist | No ejecuta comandos, no escribe sandbox, no despliega |
+-| **Evolution Fabric** | Cápsulas, GDI, selección y A2A deterministas en memoria | No publica, no adopta, no emite créditos, no ejecuta |
++| Arquitectura | 14 capas Ω y 9 Fabrics con módulo y evidencia | No convierte una capa especificada en implementada |
++| Catálogo | 10 skills, 18 tools, 14 primitivas, 12 servicios con madurez | No acredita tools `mapped` ni el 20× |
++| Constitución | `ALLOW/DENY`, ingesta de 14 etapas, licencias y trust asesor | `ALLOW` no autoriza, no ejecuta, no sustituye CROWN |
++| Skills | Investigación léxica, bibliometría, legal, open science, gobernanza, prompt, multimodal, música, voz | No buscan en red, no sintetizan audio ni clonan voz |
++| Media Fabric | Culling, estilo, retoque, galería, cotización, embeddings | No modifica píxeles, no detecta caras, no publica ni cobra |
++| Build Fabric | Plan de workspace, sandbox, preview, deploy con allowlist | No ejecuta comandos, no escribe sandbox, no despliega |
++| Evolution Fabric | Cápsulas, GDI, selección y A2A deterministas en memoria | No publica, no adopta, no emite créditos, no ejecuta |
+ 
+ ```text
+-GET  /api/v1/infinity                         resumen y auditoría
+-POST /api/v1/infinity/constitution/evaluate   evalúa; no autoriza
+-POST /api/v1/infinity/skills/run              skill determinista local
+-POST /api/v1/infinity/media/evaluate          media sin píxeles ni red
+-POST /api/v1/infinity/build/plan              plan; no ejecuta ni despliega
+-POST /api/v1/infinity/evolution/evolve        simulación en memoria
+-POST /api/v1/infinity/a2a/evaluate            evalúa verbos A2A
++GET  /api/v1/infinity                         POST /api/v1/infinity/constitution/evaluate
++POST /api/v1/infinity/skills/run              POST /api/v1/infinity/media/evaluate
++POST /api/v1/infinity/build/plan              POST /api/v1/infinity/evolution/evolve
++POST /api/v1/infinity/a2a/evaluate
+ ```
+ 
+-La tabla de la sección 16 del canon enumera **18 tools**, aunque su resumen dice 19; el catálogo sigue la tabla y documenta la divergencia. El 20× se trata como meta por capacidad, nunca como resultado: no hay benchmark reproducible. El dictamen completo está en [`docs/rfc/RFC-0012-infinity-master-consolidated.md`](docs/rfc/RFC-0012-infinity-master-consolidated.md) y el mapa operativo en [`docs/infinity/README.md`](docs/infinity/README.md).
++El 20× se trata como meta por capacidad, nunca como resultado: no hay benchmark reproducible.
++Dictamen en [`RFC-0012`](docs/rfc/RFC-0012-infinity-master-consolidated.md); mapa operativo en
++[`docs/infinity/README.md`](docs/infinity/README.md).
+ 
+ ## Nexus — capa unificada de capacidades locales
+ 
+-Nexus (`src/nexus/`) unifica patrones auditados de doce repositorios de referencia **sin copiar su código**. Todo es local, determinista y acotado; ninguna capacidad se declara en producción. El dictamen completo, incluidos los dos repositorios que no aportaron nada (`google/agi` es Android GPU Inspector y `w37fhy/QuantumultX` son reglas de proxy), está en [`docs/rfc/RFC-0010-nexus.md`](docs/rfc/RFC-0010-nexus.md).
++[`src/nexus/`](src/nexus/) unifica patrones auditados de doce repositorios de referencia **sin
++copiar su código**. Todo local, determinista y acotado; ninguna capacidad se declara en
++producción. Dictamen en [`RFC-0010`](docs/rfc/RFC-0010-nexus.md).
+ 
+ | Componente | Qué hace de verdad | Qué no hace |
+ |---|---|---|
+-| **Grafo de conocimiento** | Hechos con fuente obligatoria, detección de duplicado/conflicto, corrección versionada y retiro con razón | No resuelve conflictos solo; el hecho nunca se borra |
+-| **Bucle de agente** | Planificar/ejecutar/observar con ledger de evidencia encadenado y memoria de skills | No usa LLM ni red; una skill aprendida no autoriza |
+-| **Workflows DAG** | Orden topológico determinista, reintentos acotados y compensación inversa (saga) | Rechaza ciclos; no acepta código del cliente |
+-| **Antifragilidad** | Ventana de salud, cortacircuitos con `half-open` y sustitución declarada | No ejecuta reparaciones: solo las propone con aprobación humana |
+-| **Cuántica local** | Simulador statevector de hasta 12 qubits con muestreo determinista | No es hardware real ni reemplaza PennyLane |
++| Grafo de conocimiento | Hechos con fuente obligatoria, duplicado/conflicto, corrección versionada, retiro con razón | No resuelve conflictos solo; el hecho nunca se borra |
++| Bucle de agente | Planificar/ejecutar/observar con ledger encadenado y memoria de skills | No usa LLM ni red; una skill aprendida no autoriza |
++| Workflows DAG | Orden topológico, reintentos acotados, compensación inversa (saga) | Rechaza ciclos; no acepta código del cliente |
++| Antifragilidad | Ventana de salud, cortacircuitos `half-open`, sustitución declarada | No ejecuta reparaciones: las propone con aprobación humana |
++| Cuántica local | Simulador statevector hasta 12 qubits, muestreo determinista | No es hardware real ni reemplaza PennyLane |
+ 
+ ```text
+ GET  /api/v1/nexus                    POST /api/v1/nexus/ask
+@@ -167,39 +301,22 @@ POST /api/v1/nexus/quantum/simulate   GET  /api/v1/nexus/health
+ GET  /api/v1/nexus/repairs            POST /api/v1/nexus/diagnostics
+ ```
+ 
+-Las escrituras exigen `GENESIS_ADMIN_API_TOKEN` verificado en el servidor y el cuerpo HTTP nunca concede aprobación. Lecturas: 30 req/min; escrituras: 10 req/min. Límites actuales: el grafo, el ledger y la memoria de skills viven **en memoria del proceso** y no sobreviven a un reinicio; todas las capacidades se declaran `production: false` hasta revisión humana nominal.
+-
+-## Variables de entorno
+-
+-El contrato completo está en [`.env.example`](.env.example): una línea por variable con su semántica y su modo de fallo. Tres reglas operativas:
+-
+-1. Las variables `POST /api/v1/tamv/*` no introducen secretos propios: reutilizan `GENESIS_ADMIN_API_TOKEN`.
+-2. `ISABELLA_SIGNING_PRIVATE_KEY_PEM` / `ISABELLA_SIGNING_PUBLIC_KEY_PEM` son opcionales; sin ellos el servidor genera un par efímero por proceso y las firmas no sobreviven a un reinicio.
+-3. `MCP_SERVER_TOKEN` está sin configurar por defecto: `/api/mcp` responde 503 en lugar de ejecutar herramientas.
+-
+-Nunca se escriben valores reales de credenciales en código, documentación, commits ni logs.
++Escrituras exigen `GENESIS_ADMIN_API_TOKEN` verificado; el cuerpo HTTP nunca concede aprobación.
++Lecturas 30 req/min, escrituras 10 req/min. Grafo, ledger y memoria de skills viven **en memoria
++del proceso**; todas las capacidades se declaran `production: false` hasta revisión humana.
+ 
+-## Validación
+-
+-```bash
+-corepack pnpm install --frozen-lockfile
+-corepack pnpm run typecheck
+-corepack pnpm run lint
+-corepack pnpm run format:check
+-corepack pnpm test
+-corepack pnpm run smoke:ui
+-corepack pnpm run smoke:runtime
+-corepack pnpm run build
+-corepack pnpm run deploy:readiness
+-```
+-
+-Puertas duras del inventario y del canon: `test/deployment/route-inventory.test.ts` (las 336 rutas registradas en `src/` están congeladas; una extracción de módulo no puede perder ni renombrar un endpoint, y ningún literal puede registrarse en dos módulos), `test/deployment/openapi-contract.test.ts` (ninguna operación documentada en `docs/api/openapi.yaml` puede ser fantasma: hoy 75 operaciones), `test/deployment/env-documentation.test.ts` y `test/deployment/readiness-consistency.test.ts`. La suite del Kaos Audio System son 7 archivos y 105 casos, con oráculo DFT ingenuo que valida la FFT y regresiones explícitas de los dos errores que ya se corrigieron. En total el repositorio tiene 392 archivos `*.test.ts` y 969 archivos `.ts` bajo `src/` (594 excluyendo la isla `src/lib/**`).
++## Herramientas y skills
+ 
+-El inventario se regenera con `node scripts/route-inventory.mjs`; las columnas Auth/Rate-limit/Validación son heurísticas de análisis estático, no pruebas en ejecución.
++- `IsabellaEngine` con 9 primitivas: `observe`, `pick`, `place`, `move`, `rotate`, `handover`,
++  `release`, `wait`, `verify`. Fallback de 4 niveles: `PROGRAM → ACTION_CHUNK → HUMAN_REVIEW →
++  DEGRADED`. Habilidades de alto impacto siempre terminan en `HUMAN_REVIEW`.
++- Catálogo gobernado en [`src/tools/catalog.ts`](src/tools/catalog.ts); cada ejecución deja
++  evidencia en BookPI **antes** de que su salida llegue al llamador.
+ 
+-## Habilidades: catálogo declarado vs. registro ejecutable
++### Catálogo declarado vs. registro ejecutable
+ 
+-`src/skills/catalog-coherence.ts` reconcilia las dos listas que antes convivían sin compararse, y es la compuerta que cierra AUD-233. Medido sobre este SHA:
++[`src/skills/catalog-coherence.ts`](src/skills/catalog-coherence.ts) reconcilia las dos listas
++(compuerta AUD-233). Medido sobre este SHA:
+ 
+ | Magnitud | Valor |
+ |---|---|
+@@ -208,98 +325,185 @@ El inventario se regenera con `node scripts/route-inventory.mjs`; las columnas A
+ | Invocables (llevan `skillNumber`) | 25 |
+ | Invocables con handler enlazado | 22 + 3 alias = 25 |
+ | Afirmaciones de ejecución sin soporte | 0 |
+-| Descripciones de subsistema sin promesa de ejecución | 16 |
+ 
+-La regla no es un texto: una entrada con `skillNumber` afirma una habilidad invocable y por eso exige handler enlazado; una entrada sin número declara la madurez de un subsistema (CROWN, ARGUS, memoria territorial, síntesis de voz, la familia `monetization/*`) y no promete ejecución. `GET /api/v1/skills` expone por cada habilidad `invocable`, `handlerBound`, `executableId`, `aliasOf` y `claimSupported`, además del resumen agregado, para que el cliente no tenga que adivinar qué hay detrás de un `status: verified`. `test/skills/catalog-coherence.test.ts` falla si aparece una afirmación sin handler.
++Una entrada con `skillNumber` exige handler enlazado; una sin número declara madurez de
++subsistema y no promete ejecución. `GET /api/v1/skills` expone `invocable`, `handlerBound`,
++`executableId`, `aliasOf`, `claimSupported`. Ejecución real:
++`POST /api/v1/hypercore/skills/execute` pasa por `authorizeApiToken`, rate limit y `SkillRegistry`
++(solo corre skills con descriptor enlazado). `test/skills/catalog-coherence.test.ts` falla si
++aparece una afirmación sin handler.
+ 
+-Ejecución real: `POST /api/v1/hypercore/skills/execute` (`src/routes/hypercore.ts:196`) pasa por `authorizeApiToken`, por su propia ventana de rate limit y por el `SkillRegistry`, que sólo corre una skill cuyo descriptor está enlazado. Las 22 evolucionadas se exponen en `tools/list` del puente MCP con su huella de procedencia.
++> Las «21 skills externas de skills.sh» del paquete v2.0 **no** están cableadas como ejecutables
++> aquí: el `skills-loader.ts` adjunto es un stub de despacho. Ver
++> [Unificación v2.0](#unificación-v20-adopción-y-divergencias).
+ 
+-## Dependencias: por qué el `pnpm audit` fallaba
++## Categorización del sistema
+ 
+-`pnpm@10.28.0` (la versión fijada en `packageManager`) no lee el campo `pnpm` de `package.json`; lo ignora con aviso explícito:
++| Categoría | Descripción | Módulos clave |
++|---|---|---|
++| **Music Genesis** | Composición determinista, MIDI real, LUFS BS.1770-4, mastering WAV | `src/music/`, `src/routes/music.ts` |
++| **Kaos Audio System** | DSP espectral nativo, presets, preset adaptativo, plan de redefinición | `src/tamv/`, `src/routes/tamv.ts` |
++| **Runtime & HTTP** | Servidor Express/TypeScript, rutas, rate limiting, hardening | `src/server.ts`, `src/http/`, `src/routes/` |
++| **LLM Fundacional** | Orquestación de proveedores + fallback soberano | `src/inference/foundational-llm.ts`, `src/inference/router.ts` |
++| **RAG Soberano** | Embeddings deterministas + similitud coseno | `src/inference/rag.ts`, `src/inference/embeddings.ts` |
++| **Memoria** | 5 niveles + IKES | `src/memory/hierarchical.ts`, `src/memory/ikes.ts` |
++| **Gobernanza** | CROWN, AEGIS, Policy Gate, Zero Trust, Prompt Guard, blackout Terminus | `src/genesis/`, `src/security/`, `src/governance/` |
++| **Evidencia** | Ledger BookPI (Ed25519 + JCS RFC 8785) | `src/governance/`, `src/ivcc/` |
++| **Voz/IVCC** | Consentimiento, perfiles de voz, watermark | `src/ivcc/`, `src/routes/ivcc.ts`, `src/routes/tts.ts` |
++| **Economía** | SCER, dynamic pricing, Profit Guard, tesorería, afiliados, fraude | `src/economy/`, `src/commerce/` |
++| **Territorio** | Identidad e integración TAMV | `src/territory/` |
++| **Canon Ω∞** | Registro canónico de pilares, capas, madurez | `src/platform/omega-canon.ts` |
++| **Nexus** | Grafo, agente con evidencia, DAG, antifragilidad, cuántica local | `src/nexus/`, `src/routes/nexus.ts` |
+ 
+-```text
+-WARN  The "pnpm" field in package.json is no longer read by pnpm.
+-      The following keys were ignored: "pnpm.overrides".
+-```
++## Unificación v2.0: adopción y divergencias
+ 
+-Las remediaciones del repo vivían ahí, así que en CI no se aplicaba ninguna. Ahora viven en [`pnpm-workspace.yaml`](pnpm-workspace.yaml), que sí es la fuente que pnpm 10 consulta, y cada override está acotado a la línea que reporta el aviso (`qs@>=6.7.0 <6.16.1`, `minimatch@>=10.0.0 <11.0.1`) porque un `<` sin cota superior reescribiría también los majors que esperan eslint o vitest.
++El paquete «Documentación Total — ISABELLA CERO v2.0» llegó como archivos sueltos (no vive en el
++repo). Es **especificación aspiracional**. Conforme a AGENTS.md §6, se adopta lo que coincide con
++el código y se archiva la divergencia del resto — **no se reescribe código para que el documento
++tenga razón**. Registro completo:
++[`docs/history/archive/DIVERGENCIAS-2026-11-12.md`](docs/history/archive/DIVERGENCIAS-2026-11-12.md).
+ 
+-Además `@prisma/client` y `prisma` estaban declarados sin que ningún archivo del repo los importe (`src/` no tiene ni un `import` de `@prisma/*`, no hay `schema.prisma` ni carpeta `prisma/`). Como `drizzle-orm` los lista como peer opcional y `autoInstallPeers` está activo, esa dependencia muerta arrastraba la cadena `prisma → @prisma/composer-cli → alchemy@2.0.0-beta.83 → {@prisma/dev → @hono/node-server, @vercel/nft → glob}` al grafo de producción, que era justo la que `pnpm audit --prod` reporta. Se eliminaron ambas.
++| Afirmación v2.0 | Realidad verificada | Veredicto |
++|---|---|---|
++| 14 capas Ω + **10 Fabrics** | 14 capas + **9 Fabrics** (puerta dura `architecture.ts:359`) | Divergencia de cifra |
++| **6 Hyper Cores HC-1…HC-6** | Motor real `src/hypercore/` (~11 módulos); cero literales `HC-n` | Divergencia de taxonomía |
++| **21 skills externas** integradas | Stub de despacho + metadatos; ejecutable real = catalog-coherence (41/33/25/22+3) | No implementado |
++| API `/v1/inference`, `/v1/build`, `/v1/skills/invoke`, `/v1/bookpi/seal`, `/v1/crown/evaluate` | Solo `POST /api/v1/agents/run` existe; superficie real `/api/v1/*` (344 rutas) | Mayormente fantasma |
++| BookPI «implementado y **probado**» | Real (Ed25519+JCS+SHA3-512); SHA3 no disponible en este Node; sin WORM | Parcial / caveat ambiental |
++| Automatización por riesgo **0-4** | 5 niveles nominales `CRITICAL…NEGLIGIBLE` (`method-id.ts:32`) | Divergencia de representación |
++| **bun** install/test | **pnpm@10.28.0 + Node 24.x** | Divergencia de toolchain |
++| **Apache 2.0 / CC BY 4.0** | **Propietaria**; CC/Apache solo procedencia del canon fusionado | Divergencia de licencia |
++| **Neon/Docker/AKS** | Vercel real (bundle esbuild); durable es gate pendiente | Parcial |
++| Repo **OsoPanda1** | Origen **AnubisVillasenor1** (fuente de verdad) | Divergencia de origen |
++| CLI **isabella --sovereign** | `bin: null`; sovereign es modo de inferencia, no CLI | No implementado |
++| **ML-KEM-1024 / ML-DSA-87** | PQC fail-closed por proveedor; firma real Ed25519 | No implementado |
++| Constitución CROWN, 10 skills nativas, Terminus Blackout, 14 capas | **Reales y cableados** | Adoptado |
+ 
+-Resultado medido tras regenerar `pnpm-lock.yaml` y validarlo con `pnpm install --frozen-lockfile`:
++## Variables de entorno
+ 
+-```text
+-$ pnpm audit --prod --audit-level=moderate
+-No known vulnerabilities found        # exit 0
+-```
++El contrato completo está en [`.env.example`](.env.example): una línea por variable con su
++semántica y su modo de fallo. Reglas operativas:
+ 
+-Queda un aviso `moderate` en el grafo de desarrollo (`eslint → minimatch@9`, GHSA-g3hv-75wg-m249). No bloquea el gate del CI, que es `--prod`; se dejó deliberadamente sin forzar porque subir minimatch 9 → 11 dentro de eslint es cambiar el instrumento con el que se verifica el resto. Es un elemento abierto, no resuelto.
++1. Las rutas `POST /api/v1/music/*` y `/api/v1/tamv/*` no introducen secretos propios: reutilizan
++   `GENESIS_ADMIN_API_TOKEN`.
++2. `ISABELLA_SIGNING_PRIVATE_KEY_PEM` / `ISABELLA_SIGNING_PUBLIC_KEY_PEM` son opcionales; sin
++   ellos el servidor genera un par efímero por proceso y las firmas no sobreviven a un reinicio.
++3. `MCP_SERVER_TOKEN` sin configurar por defecto: `/api/mcp` responde 503 en lugar de ejecutar.
++4. La generación musical externa exige credenciales de proveedor; sin ellas, 503 fail-closed.
+ 
+-## Estado real del CI
++Nunca se escriben valores reales de credenciales en código, documentación, commits ni logs.
+ 
+-Las tres comprobaciones que dependen de GitHub Actions no han llegado a ejecutarse nunca en este repositorio por un bloqueo de facturación de la cuenta; la anotación del check-run lo dice literalmente:
++## Validación
+ 
+-```text
+-The job was not started because your account is locked due to a billing issue.
++```bash
++corepack pnpm install --frozen-lockfile
++corepack pnpm run typecheck
++corepack pnpm run lint
++corepack pnpm run format:check
++corepack pnpm test
++corepack pnpm run smoke:ui
++corepack pnpm run smoke:runtime
++corepack pnpm run build:dist
++corepack pnpm run deploy:readiness
+ ```
+ 
+-Los jobs figuran con ~2 s, `steps: []` y `runner_name` vacío, y su log responde 404 `BlobNotFound`. Ningún cambio de código puede volver verdes esas comprobaciones mientras el bloqueo exista; se reproducen localmente, paso por paso, las que sí se pueden ejecutar:
++Puertas duras: `test/deployment/route-inventory.test.ts` (las **344 rutas** registradas en `src/`
++están congeladas; una extracción de módulo no puede perder ni renombrar un endpoint, y ningún
++literal puede registrarse en dos módulos), `test/deployment/openapi-contract.test.ts` (ninguna
++operación documentada en `docs/api/openapi.yaml` puede ser fantasma),
++`test/deployment/env-documentation.test.ts` y `test/deployment/readiness-consistency.test.ts`.
++
++- **Music Genesis**: 7 archivos, **64 casos** (composición determinista, MIDI format 1, DSP/LUFS,
++  PCM, agente local con limitación documentada, proveedores fail-closed, rutas gobernadas).
++- **Kaos Audio System**: 7 archivos, **105 casos**, con oráculo DFT ingenuo que valida la FFT.
++- Inventario medido: **344 rutas** (espejo congelado y `docs/api/`), **991** archivos `.ts` bajo
++  `src/` (615 excluyendo la isla `src/lib/**`), **400** archivos `*.test.ts` (397 en `test/`, 3 en
++  `src/`).
+ 
+-| Paso del workflow | Resultado local |
++El inventario se regenera con `node scripts/route-inventory.mjs`; las columnas Auth/Rate-limit/
++Validación son heurísticas de análisis estático, no pruebas en ejecución.
++
++## Estado real del CI
++
++Las tres comprobaciones que dependen de GitHub Actions no han llegado a ejecutarse en este
++repositorio por un bloqueo de facturación de la cuenta (`The job was not started because your
++account is locked due to a billing issue.`). Ningún cambio de código puede volver verdes esas
++comprobaciones mientras el bloqueo exista; se reproducen localmente las que sí se pueden ejecutar:
++
++| Paso | Resultado local |
+ |---|---|
+ | `pnpm run lint` (`--max-warnings=0`) | 0 errores, 0 avisos |
+-| `pnpm run format:check` | `All matched files use Prettier code style!` (exit 0) |
+-| `pnpm run typecheck` | exit 0 con cero errores, medido sobre este árbol con el `node_modules` instalado |
++| `pnpm run format:check` | exit 0 |
++| `pnpm run typecheck` | exit 0, cero errores |
+ | `pnpm run check:env` / `check:sops` | exit 0 |
+-| `node scripts/generate-status.mjs --check` | exit 0 |
+-| `pnpm run security:suite` | 14 passed, 0 failed, 0 not_applicable |
++| `pnpm run security:suite` | 14 passed, 0 failed |
+ | `pnpm audit --prod --audit-level=moderate` | 0 vulnerabilidades conocidas |
+-| 8 suites nuevas de esta cosecha (`deploy-gate`, `sbom-generator`, `workflow-contract`, `catalog-coherence`, `evolved-bridge`, `skill-evidence-guard`, `skill-provenance`, `skill-provenance-fs`) | 91 pruebas añadidas, las 91 en verde: ningún archivo nuevo aparece en la lista de fallos |
+-| Suite completa `vitest run` | 2 552 de 2 690 en verde. Los 138 fallos son de esta máquina, no del repo: 123 son `Digest method not supported` (`node:crypto` de este runtime no ofrece `sha3-512` y `src/bookpi/crypto.ts` sí lo exige), 1 es `Cannot find module 'tslib'` del `node_modules` obsoleto y 2 son el `testTimeout` de 30 s en `hardening-guards`, que lanza `node scripts/*.mjs` como proceso hijo; esos dos scripts, ejecutados sueltos, dan exit 0. La base `d9586ce`, con el mismo `node_modules`, marca 136 fallos en los mismos 35 archivos: el conjunto en rojo no cambia. |
+-| IGE-Ω `cargo fmt`/`clippy`/`test`/`build` | no verificable aquí: no hay `cargo` ni `rustc` instalados |
++| `build:dist` + `smoke:runtime` (esta tanda) | exit 0 ambos; ver [Arranque real verificado](#arranque-real-verificado) |
++| Suite Music Genesis (esta tanda) | 7 archivos, 64 casos verdes |
++| Suite completa `vitest run` (medición previa) | 2 552 de 2 690 en verde; los 138 fallos son ambientales en esta máquina: 123 `Digest method not supported` (este Node no ofrece `sha3-512`), 1 `tslib` del `node_modules` obsoleto, 2 `testTimeout` de scripts hijos que sueltos dan exit 0. Music Genesis añade 64 casos verdes medidos por separado. |
++| IGE-Ω `cargo`/`rustc` | no verificable aquí: no hay toolchain Rust instalado |
+ 
+-El escaneo Trivy del mismo job (`severity: CRITICAL,HIGH`) queda cubierto de forma indirecta: el único `high` del grafo de producción era `@hono/node-server` dentro de la cadena de Prisma, ya eliminada.
++El `pnpm audit` fallaba porque `pnpm@10.28.0` ignora el campo `pnpm` de `package.json`; las
++remediaciones viven ahora en [`pnpm-workspace.yaml`](pnpm-workspace.yaml). Se eliminaron
++`@prisma/client` y `prisma` (dependencia muerta que arrastraba la cadena vulnerable al grafo de
++producción). Queda un aviso `moderate` en el grafo de desarrollo (`eslint → minimatch@9`), abierto
++deliberadamente: no bloquea el gate `--prod`.
+ 
+ ## Avance
+ 
+-Avance global de implementación: no publicado como porcentaje único. Mientras no exista un denominador de requisitos ponderados y reproducible, una cifra agregada sería especulación y no se presenta como hecho.
+-
+-Lo que sí es verificable en este SHA: lint, typecheck y formato en verde (exit 0 los tres, medidos en esta máquina), 336 rutas congeladas, 75 operaciones OpenAPI sin fantasmas, la compuerta de coherencia del catálogo con 0 afirmaciones sin soporte, `security:suite` 14/14, `pnpm audit --prod` limpio y superficie TAMV montada en `src/server.ts` con autorización, rate limit, ledger y blackout. Estado documentado y limitaciones: [`docs/ESTADO-REAL-ACTUAL.md`](docs/ESTADO-REAL-ACTUAL.md).
++No publicado como porcentaje único: sin un denominador de requisitos ponderados y reproducible,
++una cifra agregada sería especulación. Lo verificable en este SHA: lint/typecheck/formato en
++verde, **344 rutas** congeladas, compuerta de coherencia del catálogo con 0 afirmaciones sin
++soporte, `security:suite` 14/14, `pnpm audit --prod` limpio, **build:dist + smoke:runtime exit 0**,
++**Music Genesis 64/64**, y superficies TAMV y Music montadas en `src/server.ts` con autorización,
++rate limit, ledger y blackout. Estado y limitaciones:
++[`docs/ESTADO-REAL-ACTUAL.md`](docs/ESTADO-REAL-ACTUAL.md).
+ 
+ ## Despliegue en Vercel
+ 
+ Topología desplegada el 2026-10-31:
+ 
+-- El proyecto de Vercel está configurado como **Other** (`framework: null`), no como preset `Express`. El preset `Express` detectaba `src/server.ts` como entrypoint y lo compilaba con `tsc` dentro de la función (`/var/task/src/server.js`); Node ESM no resuelve los imports sin extensión que emite `tsc`, así que `/` fallaba con `ERR_MODULE_NOT_FOUND` mientras otras rutas respondían.
+-- La única función es `api/index.js`, que importa el bundle `dist/server.js` producido por esbuild en `pnpm build:dist`.
+-- `vercel.json` declara `outputDirectory: "public"` (solo contiene `robots.txt`) porque Vercel exige un directorio de salida estático aunque `rewrites` mande todo a `/api`.
+-- `includeFiles` se limita a `dist/**`, `src/ui/**` y `src/assets/video/**`: exactamente lo que el runtime lee del disco. Ya no incluye todo `src/**`, que hacía que Vercel compilara TypeScript fuente dentro de la función.
+-- El entrypoint raíz `server.js` se eliminó para que no exista un segundo candidato ambiguo.
++- Proyecto Vercel como **Other** (`framework: null`), no preset `Express` (el preset compilaba
++  `src/server.ts` con `tsc` dentro de la función y Node ESM no resolvía los imports sin extensión).
++- Única función `api/index.js`, que importa el bundle `dist/server.js` producido por esbuild en
++  `pnpm build:dist`.
++- `includeFiles` limitado a `dist/**`, `src/ui/**` y `src/assets/video/**`: exactamente lo que el
++  runtime lee del disco.
++- El entrypoint raíz `server.js` se eliminó para evitar un segundo candidato ambiguo.
+ 
+-Evidencia observada en el deployment `dpl_C5xBWTQ2z2Zay969hoP6YrJp2Fhq`: `GET /` → 200 `text/html` (54 447 bytes), `GET /health` → 200, y `/ui/app.js`, `/styles/cinematic.css`, `/api/v1/nexus` y `/api/v1/nexus/health` → 200. Un 200 demuestra que el artefacto arranca y sirve; **no** demuestra autoridad, ni producción certificada, ni que los gates de abajo estén cerrados.
++Evidencia observada en el deployment `dpl_C5xBWTQ2z2Zay969hoP6YrJp2Fhq`: `GET /` → 200 `text/html`,
++`GET /health` → 200, `/ui/app.js`, `/styles/cinematic.css`, `/api/v1/nexus`, `/api/v1/nexus/health`
++→ 200. Un 200 demuestra que el artefacto arranca y sirve; **no** demuestra autoridad ni producción
++certificada.
+ 
+ ## Gates pendientes para liberar
+ 
+-Mientras estos gates no estén cerrados sobre el SHA candidato, el sistema **no** se declara en producción:
++Mientras estos gates no estén cerrados sobre el SHA candidato, el sistema **no** se declara en
++producción:
+ 
+-1. CI completo (typecheck, lint, format, pruebas, build, smokes) conservando logs válidos sobre el SHA.
+-2. Persistencia durable verificada: secretos del entorno, migraciones aplicadas, adaptadores Postgres de API-keys y federación, durabilidad y recuperación de BookPI.
+-3. Conversación generativa E2E con proveedor autorizado, incluyendo timeout, error y fallback comprobados.
++1. CI completo (typecheck, lint, format, pruebas, build, smokes) con logs válidos sobre el SHA.
++2. Persistencia durable verificada: secretos del entorno, migraciones, adaptadores Postgres de
++   API-keys y federación, durabilidad y recuperación de BookPI (incluido el sello SHA3 en un Node
++   que lo ofrezca).
++3. Conversación generativa E2E con proveedor autorizado (timeout, error y fallback comprobados).
+ 4. E2E de navegador en desktop y móvil: navegación, conversación, accesibilidad y errores.
+-5. Despliegue, monitorización, backup/restore y rollback reales en el entorno objetivo. El incidente concreto `500 FUNCTION_INVOCATION_FAILED` en `/` fue reproducido, diagnosticado y corregido (ver «Despliegue en Vercel»); los demás puntos de este gate siguen abiertos.
++5. Despliegue, monitorización, backup/restore y rollback reales en el entorno objetivo.
+ 6. Revisión humana nominal de todo artefacto marcado `engine-generated`.
+ 
+ ## Propiedad
+ 
+-Copyright (c) 2026 **TAMV ONLINE ENTERPRISE** — **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)**. El TAMV Kaos Audio System, el canon Génesis Ω∞, la identidad Isabella Villaseñor y el branding TAMV ONLINE son creación y propiedad de su autor y no pueden utilizarse sin su consentimiento. Ver [`NOTICE`](NOTICE.md).
++Copyright (c) 2026 **TAMV ONLINE ENTERPRISE** — **Edwin Oswaldo Castillo Trejo (Anubis
++Villaseñor)**, bajo la red **TAMV ONLINE NETWORK**. El TAMV Kaos Audio System, el TAMV Music
++Genesis, el canon Génesis Ω∞, la identidad Isabella Villaseñor y el branding TAMV ONLINE son
++creación y propiedad de su autor y no pueden utilizarse sin su consentimiento. Ver
++[`NOTICE`](NOTICE.md).
+ 
+ ### Licencia
+ 
+ Este repositorio **no** está bajo una licencia de código abierto. Se publica bajo el aviso
+-propietario de [`LICENSE`](LICENSE): todos los derechos reservados, y ningún uso —incluidas
+-la copia, la redistribución, el despliegue como servicio y el aprovechamiento del código o
+-de su documentación para entrenar modelos de IA— sin consentimiento previo, expreso y por
+-escrito del titular. Las versiones anteriores circularon con un texto MIT; la sustitución es
+-prospectiva y su alcance está declarado en el §6 de `LICENSE`. Cada dependencia y cada
+-activo de terceros conservan la licencia que les dio su propio titular (§4).
++propietario de [`LICENSE`](LICENSE): todos los derechos reservados, y ningún uso —incluidas la
++copia, la redistribución, el despliegue como servicio y el aprovechamiento del código o de su
++documentación para entrenar modelos de IA— sin consentimiento previo, expreso y por escrito del
++titular. Las versiones anteriores circularon con un texto MIT; la sustitución es prospectiva y su
++alcance está declarado en el §6 de `LICENSE`. Cada dependencia y cada activo de terceros conservan
++la licencia que les dio su propio titular (§4).
+\ No newline at end of file
+diff --git a/docs/api/README.md b/docs/api/README.md
+index 56995a9..314bfbb 100644
+--- a/docs/api/README.md
++++ b/docs/api/README.md
+@@ -4,169 +4,169 @@
+ > `state: auto_generated` — no editar a mano; requiere revisión humana para ser
+ > evidencia (*CAPABILITY ≠ AUTHORITY ≠ EVIDENCE*, AGENTS.md).
+ 
+-- **Generado:** 2026-11-03T20:43:17.442Z
++- **Generado:** 2026-11-12T09:03:55.196Z
+ - **Fuente:** `src/server.ts` (parseo estático, sin ejecutar el servidor)
+-- **Rutas totales:** 336 · **Sensibles:** 205 · **Con contrato verificado:** 146
++- **Rutas totales:** 344 · **Sensibles:** 210 · **Con contrato verificado:** 154
+ - **Contratos de tipo considerados:** `InferenceCapability`, `ModelDescriptor`, `GenerationRequest`, `GenerationResult`, `InferenceAdapter`, `EmbeddingAdapter`, `InferenceRouter`
+ 
+ ## Tabla de rutas
+ 
+ | Método | Ruta | Handler | Sensible | Auth | Rate-limit | Validación | Verificado |
+ |---|---|---|---|---|---|---|---|
+-| `GET` | `/` | `inline@src/server.ts:493` | no | no | no | no | no |
+-| `GET` | `/styles/cinematic.css` | `inline@src/server.ts:505` | no | no | no | no | no |
+-| `GET` | `/styles/command-center.css` | `inline@src/server.ts:512` | no | no | no | no | no |
+-| `GET` | `/styles/nexus.css` | `inline@src/server.ts:519` | no | no | no | no | no |
+-| `GET` | `/ui/app.js` | `inline@src/server.ts:526` | no | no | no | no | no |
+-| `GET` | `/ui/chat-plus.js` | `inline@src/server.ts:533` | no | no | no | no | no |
+-| `GET` | `/ui/cognition-client.js` | `inline@src/server.ts:540` | sí | no | no | no | no |
+-| `GET` | `/ui/nexus.js` | `inline@src/server.ts:547` | no | no | no | no | no |
+-| `GET` | `/ui/universe-map.js` | `inline@src/server.ts:554` | no | no | no | no | no |
+-| `GET` | `/assets/video/IntroVideoIsabella.mp4` | `inline@src/server.ts:574` | no | no | no | no | no |
+-| `GET` | `/assets/video/IntroVideoIsabella-web.mp4` | `inline@src/server.ts:575` | no | no | no | no | no |
+-| `GET` | `/assets/video/IntroVideoIsabella-poster.jpg` | `inline@src/server.ts:579` | no | sí | sí | no | no |
+-| `GET` | `/api/v1/linguistics/stats` | `inline@src/server.ts:2045` | no | no | no | no | no |
+-| `GET` | `/api/v1/linguistics/search` | `inline@src/server.ts:2049` | no | no | sí | sí | no |
+-| `POST` | `/api/v1/linguistics/analyze` | `inline@src/server.ts:2057` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/linguistics/ingest` | `inline@src/server.ts:2066` | sí | sí | sí | sí | no |
+-| `GET` | `/health` | `inline@src/server.ts:2080` | no | no | no | no | no |
+-| `GET` | `/api/v1/health` | `inline@src/server.ts:2090` | no | no | no | no | sí |
+-| `GET` | `/api/v1/healthz` | `inline@src/server.ts:2104` | no | no | no | no | sí |
+-| `GET` | `/api/v1/status` | `inline@src/server.ts:2121` | no | no | no | no | sí |
+-| `GET` | `/api/v1/memory` | `inline@src/server.ts:2175` | no | sí | no | sí | sí |
+-| `POST` | `/api/v1/memory/ingest` | `inline@src/server.ts:2269` | sí | no | sí | sí | sí |
+-| `GET` | `/api/v1/memory/proposals` | `inline@src/server.ts:2301` | no | sí | no | no | sí |
+-| `POST` | `/api/v1/memory/proposals/:proposalId/resolve` | `inline@src/server.ts:2306` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/bookpi/events` | `inline@src/server.ts:2334` | no | no | sí | no | no |
+-| `GET` | `/api/v1/bookpi/events/admin` | `inline@src/server.ts:2355` | sí | sí | no | no | sí |
+-| `POST` | `/api/v1/tools/execute` | `inline@src/server.ts:2361` | sí | sí | sí | sí | sí |
+-| `GET` | `/api/v1/cognition/native-runtime` | `inline@src/server.ts:2404` | sí | no | no | no | no |
+-| `POST` | `/api/v1/cognition/route` | `inline@src/server.ts:2437` | sí | sí | sí | sí | sí |
+-| `GET` | `/api/v1/hypercore/turbo/status` | `inline@src/server.ts:3066` | no | no | sí | no | no |
+-| `POST` | `/api/v1/cognition/stream` | `inline@src/server.ts:3095` | sí | no | sí | sí | no |
+-| `GET` | `/api/v1/cognition/multimodal` | `inline@src/server.ts:3386` | sí | no | no | no | no |
+-| `POST` | `/api/v1/cognition/vision` | `inline@src/server.ts:3400` | sí | sí | sí | sí | sí |
+-| `POST` | `/api/v1/cognition/image` | `inline@src/server.ts:3456` | sí | sí | sí | sí | no |
+-| `POST` | `/api/v1/cognition/speech` | `inline@src/server.ts:3509` | sí | sí | sí | sí | sí |
+-| `POST` | `/api/v1/cognition/transcribe` | `inline@src/server.ts:3562` | sí | sí | sí | sí | sí |
+-| `POST` | `/api/v1/cognitive/request` | `inline@src/server.ts:3605` | sí | sí | sí | sí | no |
+-| `POST` | `/api/v1/isabella/mediate` | `inline@src/server.ts:3796` | sí | no | sí | sí | sí |
+-| `POST` | `/api/v1/isabella/entropy` | `inline@src/server.ts:3853` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/isabella/rag/add` | `inline@src/server.ts:3882` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/isabella/rag/search` | `inline@src/server.ts:3895` | no | no | no | sí | no |
+-| `POST` | `/api/v1/domains/search` | `inline@src/server.ts:3901` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/security/intent` | `inline@src/server.ts:3920` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/security/prompt-guard` | `inline@src/server.ts:3926` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/security/threat-intel` | `inline@src/server.ts:3932` | sí | no | no | sí | no |
+-| `GET` | `/api/v1/isabella/providers` | `inline@src/server.ts:3938` | no | no | no | no | no |
+-| `POST` | `/api/mcp` | `inline@src/server.ts:3948` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/i18n/locale` | `inline@src/server.ts:4048` | no | no | no | no | no |
+-| `POST` | `/api/isabella/chat` | `inline@src/server.ts:4058` | sí | no | sí | sí | no |
+-| `POST` | `/api/isabella/isa/reason` | `inline@src/server.ts:4088` | sí | no | no | sí | no |
+-| `POST` | `/api/isabella/crypto/sign` | `inline@src/server.ts:4105` | sí | sí | sí | sí | no |
+-| `POST` | `/api/isabella/crypto/verify` | `inline@src/server.ts:4123` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/memory/store` | `inline@src/server.ts:4137` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/memory/recall` | `inline@src/server.ts:4155` | no | sí | no | sí | sí |
+-| `GET` | `/api/v1/memory/snapshot` | `inline@src/server.ts:4163` | no | sí | no | sí | sí |
+-| `GET` | `/api/v1/isabella/full-status` | `inline@src/server.ts:4169` | no | no | no | no | no |
+-| `GET` | `/api/v1/isabella/eval` | `inline@src/server.ts:4182` | no | no | no | no | no |
+-| `POST` | `/api/v1/security/canonicalize` | `inline@src/server.ts:4206` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/governance/review/submit` | `inline@src/server.ts:4217` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/governance/review/:id/approve` | `inline@src/server.ts:4229` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/governance/review/:id/reject` | `inline@src/server.ts:4240` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/governance/review` | `inline@src/server.ts:4251` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/isabella/status` | `inline@src/server.ts:4257` | no | no | no | no | no |
+-| `POST` | `/api/v1/isabella/foundational` | `inline@src/server.ts:4266` | sí | no | sí | sí | no |
+-| `GET` | `/api/v1/hsf/status` | `inline@src/server.ts:4292` | no | no | no | no | no |
+-| `POST` | `/api/v1/hsf/invoke` | `inline@src/server.ts:4311` | sí | sí | sí | sí | no |
+-| `GET` | `/api/v1/quantum/pennylane/status` | `inline@src/server.ts:4400` | no | no | no | no | no |
+-| `POST` | `/api/v1/quantum/pennylane/execute` | `inline@src/server.ts:4412` | sí | sí | sí | sí | no |
+-| `POST` | `/api/v1/triple-blockade/scan` | `inline@src/server.ts:4475` | sí | no | sí | no | no |
+-| `POST` | `/api/v1/notebook/generate` | `inline@src/server.ts:4514` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/audio-overview/generate` | `inline@src/server.ts:4585` | sí | no | sí | sí | no |
+-| `GET` | `/api/v1/territory/rdm` | `inline@src/server.ts:4636` | no | no | no | no | no |
+-| `POST` | `/api/v1/sanitization/scan` | `inline@src/server.ts:4681` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/knowledge/admit` | `inline@src/server.ts:4706` | sí | sí | sí | sí | no |
+-| `POST` | `/api/v1/governance/git` | `inline@src/server.ts:4845` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/governance/quality-gates` | `inline@src/server.ts:4856` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/governance/deployment` | `inline@src/server.ts:4877` | sí | no | sí | no | no |
+-| `POST` | `/api/v1/governance/verify-agent-app` | `inline@src/server.ts:4897` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/governance/lifecycle-plan` | `inline@src/server.ts:4930` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/diff/observe` | `inline@src/server.ts:4941` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/sanitization/harden` | `inline@src/server.ts:4974` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/security/triangulate` | `inline@src/server.ts:4989` | sí | no | no | sí | no |
+-| `POST` | `/api/v1/ops/readiness` | `inline@src/server.ts:5100` | sí | no | sí | sí | no |
+-| `GET` | `/api/v1/readyz` | `inline@src/server.ts:5117` | no | no | no | no | sí |
+-| `GET` | `/api/v1/ops/snapshot` | `inline@src/server.ts:5129` | no | no | no | no | no |
+-| `GET` | `/api/v1/integrations/graph` | `inline@src/server.ts:5139` | no | sí | no | no | no |
+-| `GET` | `/api/v1/ops/latency` | `inline@src/server.ts:5326` | no | sí | no | no | no |
+-| `POST` | `/api/v1/isa/pipeline` | `inline@src/server.ts:5338` | sí | no | sí | no | sí |
+-| `POST` | `/api/v1/isa/act` | `inline@src/server.ts:5352` | sí | no | sí | sí | sí |
+-| `POST` | `/api/v1/litle/attest` | `inline@src/server.ts:5386` | sí | sí | sí | sí | no |
+-| `POST` | `/api/v1/litle/verify` | `inline@src/server.ts:5459` | sí | no | sí | sí | no |
+-| `POST` | `/api/v1/connectors/ingest` | `inline@src/server.ts:5557` | sí | no | no | sí | no |
+-| `GET` | `/api/v1/metrics` | `inline@src/server.ts:5658` | no | sí | no | no | no |
+-| `GET` | `/api/v1/runtime/capabilities` | `inline@src/server.ts:5670` | no | no | no | no | no |
+-| `POST` | `/api/v1/memory/verified` | `inline@src/server.ts:5701` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/memory/verified` | `inline@src/server.ts:5728` | no | sí | no | sí | sí |
+-| `GET` | `/api/v1/osiris/status` | `inline@src/server.ts:5745` | no | sí | no | no | no |
+-| `POST` | `/api/v1/osiris/inspect` | `inline@src/server.ts:5750` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/billing/prices` | `inline@src/server.ts:5821` | no | no | no | no | no |
+-| `GET` | `/api/v1/billing/plans` | `inline@src/server.ts:5848` | no | no | no | no | no |
+-| `GET` | `/api/v1/billing/entitlements` | `inline@src/server.ts:5865` | no | no | no | sí | no |
+-| `GET` | `/api/v1/billing/subscription` | `inline@src/server.ts:5880` | no | sí | no | sí | no |
+-| `POST` | `/api/v1/billing/subscribe` | `inline@src/server.ts:5892` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/billing/cancel` | `inline@src/server.ts:5939` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/billing/usage` | `inline@src/server.ts:5968` | no | sí | no | sí | no |
+-| `POST` | `/api/v1/commerce/offers` | `inline@src/server.ts:5986` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/gameover/constitution` | `inline@src/server.ts:6039` | no | sí | no | no | no |
+-| `GET` | `/api/v1/gameover/passports` | `inline@src/server.ts:6044` | no | sí | no | no | no |
+-| `POST` | `/api/v1/gameover/passports` | `inline@src/server.ts:6056` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/gameover/passports/revoke` | `inline@src/server.ts:6096` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/gameover/govern` | `inline@src/server.ts:6114` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/gateway/activity` | `inline@src/server.ts:6282` | sí | sí | no | no | no |
+-| `GET` | `/api/v1/memory/stats` | `inline@src/server.ts:6681` | no | sí | no | no | sí |
+-| `POST` | `/api/v1/memory/query` | `inline@src/server.ts:6686` | sí | sí | no | sí | sí |
+-| `POST` | `/api/v1/security/authenticate` | `inline@src/server.ts:6697` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/security/audit` | `inline@src/server.ts:6707` | sí | sí | no | no | no |
+-| `POST` | `/api/v1/governance/evaluate` | `inline@src/server.ts:6714` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/governance/audit` | `inline@src/server.ts:6724` | sí | sí | no | no | no |
+-| `POST` | `/api/v1/learning/train` | `inline@src/server.ts:6739` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/observability/metrics` | `inline@src/server.ts:6776` | no | sí | no | no | no |
+-| `GET` | `/api/v1/observability/health` | `inline@src/server.ts:6782` | no | sí | no | no | no |
+-| `GET` | `/api/v1/observability/slos` | `inline@src/server.ts:6788` | no | sí | no | no | no |
+-| `GET` | `/api/v1/observability/alerts` | `inline@src/server.ts:6794` | no | sí | no | no | no |
+-| `GET` | `/api/v1/observability/dashboards` | `inline@src/server.ts:6806` | no | sí | no | no | no |
+-| `GET` | `/api/v1/federation/status` | `inline@src/server.ts:6816` | no | sí | no | no | no |
+-| `GET` | `/api/v1/federation/telemetry` | `inline@src/server.ts:6821` | no | sí | no | no | no |
+-| `POST` | `/api/v1/federation/cross` | `inline@src/server.ts:6826` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/pipeline/metrics` | `inline@src/server.ts:6843` | sí | sí | no | no | no |
+-| `GET` | `/api/v1/pipeline/stats/hot` | `inline@src/server.ts:6848` | sí | sí | no | no | no |
+-| `GET` | `/api/v1/pipeline/stats/cold` | `inline@src/server.ts:6853` | sí | sí | no | no | no |
+-| `GET` | `/api/v1/platform/capabilities` | `inline@src/server.ts:6859` | no | sí | no | no | no |
+-| `POST` | `/api/v1/evidence-graph/append` | `inline@src/server.ts:6864` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/evidence-graph/verify` | `inline@src/server.ts:6885` | sí | sí | no | no | no |
+-| `POST` | `/api/v1/temporal/record` | `inline@src/server.ts:6894` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/temporal/versions` | `inline@src/server.ts:6908` | no | sí | no | no | no |
+-| `POST` | `/api/v1/citemesh/publish` | `inline@src/server.ts:6918` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/citemesh/replay` | `inline@src/server.ts:6935` | no | sí | no | sí | no |
+-| `POST` | `/api/v1/cognitive-capital/list` | `inline@src/server.ts:6946` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/cognitive-capital/trade` | `inline@src/server.ts:6968` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/immune/report` | `inline@src/server.ts:6984` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/immune/assess` | `inline@src/server.ts:6999` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/fabric/execute` | `inline@src/server.ts:7014` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/monetization/plans` | `inline@src/server.ts:7031` | no | sí | no | no | no |
+-| `POST` | `/api/v1/monetization/escrow` | `inline@src/server.ts:7036` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/monetization/escrow/release` | `inline@src/server.ts:7052` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/monetization/payout` | `inline@src/server.ts:7063` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/monetization/scer-split` | `inline@src/server.ts:7079` | sí | sí | no | sí | no |
+-| `POST` | `/api/v1/pricing/dynamic` | `inline@src/server.ts:7090` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/monetization/stats` | `inline@src/server.ts:7106` | no | sí | no | no | no |
+-| `POST` | `/api/v1/monetization/profit-price` | `inline@src/server.ts:7115` | sí | sí | no | sí | no |
+-| `GET` | `/api/v1/ops/preflight` | `inline@src/server.ts:7135` | no | sí | no | no | no |
+-| `GET` | `/api/v1/reina/status` | `inline@src/server.ts:7161` | no | no | sí | no | no |
+-| `POST` | `/api/v1/reina/adjudicate` | `inline@src/server.ts:7175` | sí | sí | no | sí | sí |
+-| `GET` | `/api/v1/reina/log/proof/:index` | `inline@src/server.ts:7205` | no | sí | no | sí | no |
++| `GET` | `/` | `inline@src/server.ts:494` | no | no | no | no | no |
++| `GET` | `/styles/cinematic.css` | `inline@src/server.ts:506` | no | no | no | no | no |
++| `GET` | `/styles/command-center.css` | `inline@src/server.ts:513` | no | no | no | no | no |
++| `GET` | `/styles/nexus.css` | `inline@src/server.ts:520` | no | no | no | no | no |
++| `GET` | `/ui/app.js` | `inline@src/server.ts:527` | no | no | no | no | no |
++| `GET` | `/ui/chat-plus.js` | `inline@src/server.ts:534` | no | no | no | no | no |
++| `GET` | `/ui/cognition-client.js` | `inline@src/server.ts:541` | sí | no | no | no | no |
++| `GET` | `/ui/nexus.js` | `inline@src/server.ts:548` | no | no | no | no | no |
++| `GET` | `/ui/universe-map.js` | `inline@src/server.ts:555` | no | no | no | no | no |
++| `GET` | `/assets/video/IntroVideoIsabella.mp4` | `inline@src/server.ts:575` | no | no | no | no | no |
++| `GET` | `/assets/video/IntroVideoIsabella-web.mp4` | `inline@src/server.ts:576` | no | no | no | no | no |
++| `GET` | `/assets/video/IntroVideoIsabella-poster.jpg` | `inline@src/server.ts:580` | no | sí | sí | no | no |
++| `GET` | `/api/v1/linguistics/stats` | `inline@src/server.ts:2049` | no | no | no | no | no |
++| `GET` | `/api/v1/linguistics/search` | `inline@src/server.ts:2053` | no | no | sí | sí | no |
++| `POST` | `/api/v1/linguistics/analyze` | `inline@src/server.ts:2061` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/linguistics/ingest` | `inline@src/server.ts:2070` | sí | sí | sí | sí | no |
++| `GET` | `/health` | `inline@src/server.ts:2084` | no | no | no | no | no |
++| `GET` | `/api/v1/health` | `inline@src/server.ts:2094` | no | no | no | no | sí |
++| `GET` | `/api/v1/healthz` | `inline@src/server.ts:2108` | no | no | no | no | sí |
++| `GET` | `/api/v1/status` | `inline@src/server.ts:2125` | no | no | no | no | sí |
++| `GET` | `/api/v1/memory` | `inline@src/server.ts:2179` | no | sí | no | sí | sí |
++| `POST` | `/api/v1/memory/ingest` | `inline@src/server.ts:2273` | sí | no | sí | sí | sí |
++| `GET` | `/api/v1/memory/proposals` | `inline@src/server.ts:2305` | no | sí | no | no | sí |
++| `POST` | `/api/v1/memory/proposals/:proposalId/resolve` | `inline@src/server.ts:2310` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/bookpi/events` | `inline@src/server.ts:2338` | no | no | sí | no | no |
++| `GET` | `/api/v1/bookpi/events/admin` | `inline@src/server.ts:2359` | sí | sí | no | no | sí |
++| `POST` | `/api/v1/tools/execute` | `inline@src/server.ts:2365` | sí | sí | sí | sí | sí |
++| `GET` | `/api/v1/cognition/native-runtime` | `inline@src/server.ts:2408` | sí | no | no | no | no |
++| `POST` | `/api/v1/cognition/route` | `inline@src/server.ts:2441` | sí | sí | sí | sí | sí |
++| `GET` | `/api/v1/hypercore/turbo/status` | `inline@src/server.ts:3070` | no | no | sí | no | no |
++| `POST` | `/api/v1/cognition/stream` | `inline@src/server.ts:3099` | sí | no | sí | sí | no |
++| `GET` | `/api/v1/cognition/multimodal` | `inline@src/server.ts:3390` | sí | no | no | no | no |
++| `POST` | `/api/v1/cognition/vision` | `inline@src/server.ts:3404` | sí | sí | sí | sí | sí |
++| `POST` | `/api/v1/cognition/image` | `inline@src/server.ts:3460` | sí | sí | sí | sí | no |
++| `POST` | `/api/v1/cognition/speech` | `inline@src/server.ts:3513` | sí | sí | sí | sí | sí |
++| `POST` | `/api/v1/cognition/transcribe` | `inline@src/server.ts:3566` | sí | sí | sí | sí | sí |
++| `POST` | `/api/v1/cognitive/request` | `inline@src/server.ts:3609` | sí | sí | sí | sí | no |
++| `POST` | `/api/v1/isabella/mediate` | `inline@src/server.ts:3800` | sí | no | sí | sí | sí |
++| `POST` | `/api/v1/isabella/entropy` | `inline@src/server.ts:3857` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/isabella/rag/add` | `inline@src/server.ts:3886` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/isabella/rag/search` | `inline@src/server.ts:3899` | no | no | no | sí | no |
++| `POST` | `/api/v1/domains/search` | `inline@src/server.ts:3905` | sí | no | no | sí | no |
++| `POST` | `/api/v1/security/intent` | `inline@src/server.ts:3924` | sí | no | no | sí | no |
++| `POST` | `/api/v1/security/prompt-guard` | `inline@src/server.ts:3930` | sí | no | no | sí | no |
++| `POST` | `/api/v1/security/threat-intel` | `inline@src/server.ts:3936` | sí | no | no | sí | no |
++| `GET` | `/api/v1/isabella/providers` | `inline@src/server.ts:3942` | no | no | no | no | no |
++| `POST` | `/api/mcp` | `inline@src/server.ts:3952` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/i18n/locale` | `inline@src/server.ts:4052` | no | no | no | no | no |
++| `POST` | `/api/isabella/chat` | `inline@src/server.ts:4062` | sí | no | sí | sí | no |
++| `POST` | `/api/isabella/isa/reason` | `inline@src/server.ts:4092` | sí | no | no | sí | no |
++| `POST` | `/api/isabella/crypto/sign` | `inline@src/server.ts:4109` | sí | sí | sí | sí | no |
++| `POST` | `/api/isabella/crypto/verify` | `inline@src/server.ts:4127` | sí | no | no | sí | no |
++| `POST` | `/api/v1/memory/store` | `inline@src/server.ts:4141` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/memory/recall` | `inline@src/server.ts:4159` | no | sí | no | sí | sí |
++| `GET` | `/api/v1/memory/snapshot` | `inline@src/server.ts:4167` | no | sí | no | sí | sí |
++| `GET` | `/api/v1/isabella/full-status` | `inline@src/server.ts:4173` | no | no | no | no | no |
++| `GET` | `/api/v1/isabella/eval` | `inline@src/server.ts:4186` | no | no | no | no | no |
++| `POST` | `/api/v1/security/canonicalize` | `inline@src/server.ts:4210` | sí | no | no | sí | no |
++| `POST` | `/api/v1/governance/review/submit` | `inline@src/server.ts:4221` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/governance/review/:id/approve` | `inline@src/server.ts:4233` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/governance/review/:id/reject` | `inline@src/server.ts:4244` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/governance/review` | `inline@src/server.ts:4255` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/isabella/status` | `inline@src/server.ts:4261` | no | no | no | no | no |
++| `POST` | `/api/v1/isabella/foundational` | `inline@src/server.ts:4270` | sí | no | sí | sí | no |
++| `GET` | `/api/v1/hsf/status` | `inline@src/server.ts:4296` | no | no | no | no | no |
++| `POST` | `/api/v1/hsf/invoke` | `inline@src/server.ts:4315` | sí | sí | sí | sí | no |
++| `GET` | `/api/v1/quantum/pennylane/status` | `inline@src/server.ts:4404` | no | no | no | no | no |
++| `POST` | `/api/v1/quantum/pennylane/execute` | `inline@src/server.ts:4416` | sí | sí | sí | sí | no |
++| `POST` | `/api/v1/triple-blockade/scan` | `inline@src/server.ts:4479` | sí | no | sí | no | no |
++| `POST` | `/api/v1/notebook/generate` | `inline@src/server.ts:4518` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/audio-overview/generate` | `inline@src/server.ts:4589` | sí | no | sí | sí | no |
++| `GET` | `/api/v1/territory/rdm` | `inline@src/server.ts:4640` | no | no | no | no | no |
++| `POST` | `/api/v1/sanitization/scan` | `inline@src/server.ts:4685` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/knowledge/admit` | `inline@src/server.ts:4710` | sí | sí | sí | sí | no |
++| `POST` | `/api/v1/governance/git` | `inline@src/server.ts:4849` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/governance/quality-gates` | `inline@src/server.ts:4860` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/governance/deployment` | `inline@src/server.ts:4881` | sí | no | sí | no | no |
++| `POST` | `/api/v1/governance/verify-agent-app` | `inline@src/server.ts:4901` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/governance/lifecycle-plan` | `inline@src/server.ts:4934` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/diff/observe` | `inline@src/server.ts:4945` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/sanitization/harden` | `inline@src/server.ts:4978` | sí | no | no | sí | no |
++| `POST` | `/api/v1/security/triangulate` | `inline@src/server.ts:4993` | sí | no | no | sí | no |
++| `POST` | `/api/v1/ops/readiness` | `inline@src/server.ts:5104` | sí | no | sí | sí | no |
++| `GET` | `/api/v1/readyz` | `inline@src/server.ts:5121` | no | no | no | no | sí |
++| `GET` | `/api/v1/ops/snapshot` | `inline@src/server.ts:5133` | no | no | no | no | no |
++| `GET` | `/api/v1/integrations/graph` | `inline@src/server.ts:5143` | no | sí | no | no | no |
++| `GET` | `/api/v1/ops/latency` | `inline@src/server.ts:5330` | no | sí | no | no | no |
++| `POST` | `/api/v1/isa/pipeline` | `inline@src/server.ts:5342` | sí | no | sí | no | sí |
++| `POST` | `/api/v1/isa/act` | `inline@src/server.ts:5356` | sí | no | sí | sí | sí |
++| `POST` | `/api/v1/litle/attest` | `inline@src/server.ts:5390` | sí | sí | sí | sí | no |
++| `POST` | `/api/v1/litle/verify` | `inline@src/server.ts:5463` | sí | no | sí | sí | no |
++| `POST` | `/api/v1/connectors/ingest` | `inline@src/server.ts:5561` | sí | no | no | sí | no |
++| `GET` | `/api/v1/metrics` | `inline@src/server.ts:5662` | no | sí | no | no | no |
++| `GET` | `/api/v1/runtime/capabilities` | `inline@src/server.ts:5674` | no | no | no | no | no |
++| `POST` | `/api/v1/memory/verified` | `inline@src/server.ts:5705` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/memory/verified` | `inline@src/server.ts:5732` | no | sí | no | sí | sí |
++| `GET` | `/api/v1/osiris/status` | `inline@src/server.ts:5749` | no | sí | no | no | no |
++| `POST` | `/api/v1/osiris/inspect` | `inline@src/server.ts:5754` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/billing/prices` | `inline@src/server.ts:5825` | no | no | no | no | no |
++| `GET` | `/api/v1/billing/plans` | `inline@src/server.ts:5852` | no | no | no | no | no |
++| `GET` | `/api/v1/billing/entitlements` | `inline@src/server.ts:5869` | no | no | no | sí | no |
++| `GET` | `/api/v1/billing/subscription` | `inline@src/server.ts:5884` | no | sí | no | sí | no |
++| `POST` | `/api/v1/billing/subscribe` | `inline@src/server.ts:5896` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/billing/cancel` | `inline@src/server.ts:5943` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/billing/usage` | `inline@src/server.ts:5972` | no | sí | no | sí | no |
++| `POST` | `/api/v1/commerce/offers` | `inline@src/server.ts:5990` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/gameover/constitution` | `inline@src/server.ts:6043` | no | sí | no | no | no |
++| `GET` | `/api/v1/gameover/passports` | `inline@src/server.ts:6048` | no | sí | no | no | no |
++| `POST` | `/api/v1/gameover/passports` | `inline@src/server.ts:6060` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/gameover/passports/revoke` | `inline@src/server.ts:6100` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/gameover/govern` | `inline@src/server.ts:6118` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/gateway/activity` | `inline@src/server.ts:6286` | sí | sí | no | no | no |
++| `GET` | `/api/v1/memory/stats` | `inline@src/server.ts:6707` | no | sí | no | no | sí |
++| `POST` | `/api/v1/memory/query` | `inline@src/server.ts:6712` | sí | sí | no | sí | sí |
++| `POST` | `/api/v1/security/authenticate` | `inline@src/server.ts:6723` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/security/audit` | `inline@src/server.ts:6733` | sí | sí | no | no | no |
++| `POST` | `/api/v1/governance/evaluate` | `inline@src/server.ts:6740` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/governance/audit` | `inline@src/server.ts:6750` | sí | sí | no | no | no |
++| `POST` | `/api/v1/learning/train` | `inline@src/server.ts:6765` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/observability/metrics` | `inline@src/server.ts:6802` | no | sí | no | no | no |
++| `GET` | `/api/v1/observability/health` | `inline@src/server.ts:6808` | no | sí | no | no | no |
++| `GET` | `/api/v1/observability/slos` | `inline@src/server.ts:6814` | no | sí | no | no | no |
++| `GET` | `/api/v1/observability/alerts` | `inline@src/server.ts:6820` | no | sí | no | no | no |
++| `GET` | `/api/v1/observability/dashboards` | `inline@src/server.ts:6832` | no | sí | no | no | no |
++| `GET` | `/api/v1/federation/status` | `inline@src/server.ts:6842` | no | sí | no | no | no |
++| `GET` | `/api/v1/federation/telemetry` | `inline@src/server.ts:6847` | no | sí | no | no | no |
++| `POST` | `/api/v1/federation/cross` | `inline@src/server.ts:6852` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/pipeline/metrics` | `inline@src/server.ts:6869` | sí | sí | no | no | no |
++| `GET` | `/api/v1/pipeline/stats/hot` | `inline@src/server.ts:6874` | sí | sí | no | no | no |
++| `GET` | `/api/v1/pipeline/stats/cold` | `inline@src/server.ts:6879` | sí | sí | no | no | no |
++| `GET` | `/api/v1/platform/capabilities` | `inline@src/server.ts:6885` | no | sí | no | no | no |
++| `POST` | `/api/v1/evidence-graph/append` | `inline@src/server.ts:6890` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/evidence-graph/verify` | `inline@src/server.ts:6911` | sí | sí | no | no | no |
++| `POST` | `/api/v1/temporal/record` | `inline@src/server.ts:6920` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/temporal/versions` | `inline@src/server.ts:6934` | no | sí | no | no | no |
++| `POST` | `/api/v1/citemesh/publish` | `inline@src/server.ts:6944` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/citemesh/replay` | `inline@src/server.ts:6961` | no | sí | no | sí | no |
++| `POST` | `/api/v1/cognitive-capital/list` | `inline@src/server.ts:6972` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/cognitive-capital/trade` | `inline@src/server.ts:6994` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/immune/report` | `inline@src/server.ts:7010` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/immune/assess` | `inline@src/server.ts:7025` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/fabric/execute` | `inline@src/server.ts:7040` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/monetization/plans` | `inline@src/server.ts:7057` | no | sí | no | no | no |
++| `POST` | `/api/v1/monetization/escrow` | `inline@src/server.ts:7062` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/monetization/escrow/release` | `inline@src/server.ts:7078` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/monetization/payout` | `inline@src/server.ts:7089` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/monetization/scer-split` | `inline@src/server.ts:7105` | sí | sí | no | sí | no |
++| `POST` | `/api/v1/pricing/dynamic` | `inline@src/server.ts:7116` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/monetization/stats` | `inline@src/server.ts:7132` | no | sí | no | no | no |
++| `POST` | `/api/v1/monetization/profit-price` | `inline@src/server.ts:7141` | sí | sí | no | sí | no |
++| `GET` | `/api/v1/ops/preflight` | `inline@src/server.ts:7161` | no | sí | no | no | no |
++| `GET` | `/api/v1/reina/status` | `inline@src/server.ts:7187` | no | no | sí | no | no |
++| `POST` | `/api/v1/reina/adjudicate` | `inline@src/server.ts:7201` | sí | sí | no | sí | sí |
++| `GET` | `/api/v1/reina/log/proof/:index` | `inline@src/server.ts:7231` | no | sí | no | sí | no |
+ | `GET` | `/api/v1/agents/mesh` | `inline@src/routes/agents-mesh.ts:49` | no | no | sí | no | sí |
+ | `POST` | `/api/v1/agents/mesh/evaluate` | `inline@src/routes/agents-mesh.ts:63` | sí | no | sí | sí | sí |
+ | `GET` | `/api/v1/agents` | `inline@src/routes/agents.ts:28` | no | no | sí | no | no |
+@@ -255,6 +255,14 @@
+ | `GET` | `/api/v1/marketplace` | `inline@src/routes/marketplace.ts:70` | no | no | sí | no | sí |
+ | `GET` | `/api/v1/marketplace/:packId` | `inline@src/routes/marketplace.ts:75` | no | no | sí | sí | sí |
+ | `POST` | `/api/v1/marketplace/plan` | `inline@src/routes/marketplace.ts:86` | sí | sí | sí | sí | sí |
++| `GET` | `/api/v1/music/status` | `inline@src/routes/music.ts:149` | no | no | no | no | sí |
++| `GET` | `/api/v1/music/genres` | `inline@src/routes/music.ts:168` | no | no | no | no | sí |
++| `POST` | `/api/v1/music/plan` | `inline@src/routes/music.ts:188` | sí | sí | sí | no | sí |
++| `POST` | `/api/v1/music/compose` | `inline@src/routes/music.ts:213` | sí | sí | sí | no | sí |
++| `POST` | `/api/v1/music/analyze` | `inline@src/routes/music.ts:248` | sí | sí | sí | no | sí |
++| `POST` | `/api/v1/music/master` | `inline@src/routes/music.ts:272` | sí | sí | sí | no | sí |
++| `POST` | `/api/v1/music/generate` | `inline@src/routes/music.ts:312` | sí | sí | sí | no | sí |
++| `GET` | `/api/v1/music/tasks/:taskId` | `inline@src/routes/music.ts:368` | no | no | no | no | sí |
+ | `GET` | `/api/v1/native/engines` | `inline@src/routes/native-engines.ts:78` | no | no | no | no | sí |
+ | `GET` | `/api/v1/native/llm/status` | `inline@src/routes/native-engines.ts:119` | no | no | sí | no | no |
+ | `POST` | `/api/v1/native/llm/generate` | `inline@src/routes/native-engines.ts:132` | sí | sí | sí | sí | sí |
+@@ -377,7 +385,7 @@ una referencia externa al contrato de la ruta:
+    (`types:src/inference/types.ts:...`).
+ 
+ Ser simplemente un handler de Express tipado por inferencia **no** cuenta como
+-verificado. Hoy la mayoría de rutas queda con `verified: false` (190 de 336);
++verificado. Hoy la mayoría de rutas queda con `verified: false` (190 de 344);
+ eso es el estado real del repositorio, no un defecto del script.
+ 
+ ## UI/API truthfulness (ISA-451..458)
+diff --git a/docs/api/route-inventory.json b/docs/api/route-inventory.json
+index f70b995..63dd50e 100644
+--- a/docs/api/route-inventory.json
++++ b/docs/api/route-inventory.json
+@@ -2,9 +2,9 @@
+   {
+     "route": "/",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:493",
++    "handler": "inline@src/server.ts:494",
+     "verified": false,
+-    "line": 493,
++    "line": 494,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -16,9 +16,9 @@
+   {
+     "route": "/styles/cinematic.css",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:505",
++    "handler": "inline@src/server.ts:506",
+     "verified": false,
+-    "line": 505,
++    "line": 506,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -30,9 +30,9 @@
+   {
+     "route": "/styles/command-center.css",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:512",
++    "handler": "inline@src/server.ts:513",
+     "verified": false,
+-    "line": 512,
++    "line": 513,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -44,9 +44,9 @@
+   {
+     "route": "/styles/nexus.css",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:519",
++    "handler": "inline@src/server.ts:520",
+     "verified": false,
+-    "line": 519,
++    "line": 520,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -58,9 +58,9 @@
+   {
+     "route": "/ui/app.js",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:526",
++    "handler": "inline@src/server.ts:527",
+     "verified": false,
+-    "line": 526,
++    "line": 527,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -72,9 +72,9 @@
+   {
+     "route": "/ui/chat-plus.js",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:533",
++    "handler": "inline@src/server.ts:534",
+     "verified": false,
+-    "line": 533,
++    "line": 534,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -86,9 +86,9 @@
+   {
+     "route": "/ui/cognition-client.js",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:540",
++    "handler": "inline@src/server.ts:541",
+     "verified": false,
+-    "line": 540,
++    "line": 541,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -100,9 +100,9 @@
+   {
+     "route": "/ui/nexus.js",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:547",
++    "handler": "inline@src/server.ts:548",
+     "verified": false,
+-    "line": 547,
++    "line": 548,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -114,9 +114,9 @@
+   {
+     "route": "/ui/universe-map.js",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:554",
++    "handler": "inline@src/server.ts:555",
+     "verified": false,
+-    "line": 554,
++    "line": 555,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -128,9 +128,9 @@
+   {
+     "route": "/assets/video/IntroVideoIsabella.mp4",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:574",
++    "handler": "inline@src/server.ts:575",
+     "verified": false,
+-    "line": 574,
++    "line": 575,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -142,9 +142,9 @@
+   {
+     "route": "/assets/video/IntroVideoIsabella-web.mp4",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:575",
++    "handler": "inline@src/server.ts:576",
+     "verified": false,
+-    "line": 575,
++    "line": 576,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -156,9 +156,9 @@
+   {
+     "route": "/assets/video/IntroVideoIsabella-poster.jpg",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:579",
++    "handler": "inline@src/server.ts:580",
+     "verified": false,
+-    "line": 579,
++    "line": 580,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -170,9 +170,9 @@
+   {
+     "route": "/api/v1/linguistics/stats",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2045",
++    "handler": "inline@src/server.ts:2049",
+     "verified": false,
+-    "line": 2045,
++    "line": 2049,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -184,9 +184,9 @@
+   {
+     "route": "/api/v1/linguistics/search",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2049",
++    "handler": "inline@src/server.ts:2053",
+     "verified": false,
+-    "line": 2049,
++    "line": 2053,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -198,9 +198,9 @@
+   {
+     "route": "/api/v1/linguistics/analyze",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2057",
++    "handler": "inline@src/server.ts:2061",
+     "verified": false,
+-    "line": 2057,
++    "line": 2061,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -212,9 +212,9 @@
+   {
+     "route": "/api/v1/linguistics/ingest",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2066",
++    "handler": "inline@src/server.ts:2070",
+     "verified": false,
+-    "line": 2066,
++    "line": 2070,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -226,9 +226,9 @@
+   {
+     "route": "/health",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2080",
++    "handler": "inline@src/server.ts:2084",
+     "verified": false,
+-    "line": 2080,
++    "line": 2084,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -240,9 +240,9 @@
+   {
+     "route": "/api/v1/health",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2090",
++    "handler": "inline@src/server.ts:2094",
+     "verified": true,
+-    "line": 2090,
++    "line": 2094,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -254,9 +254,9 @@
+   {
+     "route": "/api/v1/healthz",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2104",
++    "handler": "inline@src/server.ts:2108",
+     "verified": true,
+-    "line": 2104,
++    "line": 2108,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -268,9 +268,9 @@
+   {
+     "route": "/api/v1/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2121",
++    "handler": "inline@src/server.ts:2125",
+     "verified": true,
+-    "line": 2121,
++    "line": 2125,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -282,9 +282,9 @@
+   {
+     "route": "/api/v1/memory",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2175",
++    "handler": "inline@src/server.ts:2179",
+     "verified": true,
+-    "line": 2175,
++    "line": 2179,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -296,9 +296,9 @@
+   {
+     "route": "/api/v1/memory/ingest",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2269",
++    "handler": "inline@src/server.ts:2273",
+     "verified": true,
+-    "line": 2269,
++    "line": 2273,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -310,9 +310,9 @@
+   {
+     "route": "/api/v1/memory/proposals",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2301",
++    "handler": "inline@src/server.ts:2305",
+     "verified": true,
+-    "line": 2301,
++    "line": 2305,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -324,9 +324,9 @@
+   {
+     "route": "/api/v1/memory/proposals/:proposalId/resolve",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2306",
++    "handler": "inline@src/server.ts:2310",
+     "verified": true,
+-    "line": 2306,
++    "line": 2310,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -338,9 +338,9 @@
+   {
+     "route": "/api/v1/bookpi/events",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2334",
++    "handler": "inline@src/server.ts:2338",
+     "verified": false,
+-    "line": 2334,
++    "line": 2338,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -352,9 +352,9 @@
+   {
+     "route": "/api/v1/bookpi/events/admin",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2355",
++    "handler": "inline@src/server.ts:2359",
+     "verified": true,
+-    "line": 2355,
++    "line": 2359,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -366,9 +366,9 @@
+   {
+     "route": "/api/v1/tools/execute",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2361",
++    "handler": "inline@src/server.ts:2365",
+     "verified": true,
+-    "line": 2361,
++    "line": 2365,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -380,9 +380,9 @@
+   {
+     "route": "/api/v1/cognition/native-runtime",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:2404",
++    "handler": "inline@src/server.ts:2408",
+     "verified": false,
+-    "line": 2404,
++    "line": 2408,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -394,9 +394,9 @@
+   {
+     "route": "/api/v1/cognition/route",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:2437",
++    "handler": "inline@src/server.ts:2441",
+     "verified": true,
+-    "line": 2437,
++    "line": 2441,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -408,9 +408,9 @@
+   {
+     "route": "/api/v1/hypercore/turbo/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:3066",
++    "handler": "inline@src/server.ts:3070",
+     "verified": false,
+-    "line": 3066,
++    "line": 3070,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -422,9 +422,9 @@
+   {
+     "route": "/api/v1/cognition/stream",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3095",
++    "handler": "inline@src/server.ts:3099",
+     "verified": false,
+-    "line": 3095,
++    "line": 3099,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -436,9 +436,9 @@
+   {
+     "route": "/api/v1/cognition/multimodal",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:3386",
++    "handler": "inline@src/server.ts:3390",
+     "verified": false,
+-    "line": 3386,
++    "line": 3390,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -450,9 +450,9 @@
+   {
+     "route": "/api/v1/cognition/vision",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3400",
++    "handler": "inline@src/server.ts:3404",
+     "verified": true,
+-    "line": 3400,
++    "line": 3404,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -464,9 +464,9 @@
+   {
+     "route": "/api/v1/cognition/image",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3456",
++    "handler": "inline@src/server.ts:3460",
+     "verified": false,
+-    "line": 3456,
++    "line": 3460,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -478,9 +478,9 @@
+   {
+     "route": "/api/v1/cognition/speech",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3509",
++    "handler": "inline@src/server.ts:3513",
+     "verified": true,
+-    "line": 3509,
++    "line": 3513,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -492,9 +492,9 @@
+   {
+     "route": "/api/v1/cognition/transcribe",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3562",
++    "handler": "inline@src/server.ts:3566",
+     "verified": true,
+-    "line": 3562,
++    "line": 3566,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -506,9 +506,9 @@
+   {
+     "route": "/api/v1/cognitive/request",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3605",
++    "handler": "inline@src/server.ts:3609",
+     "verified": false,
+-    "line": 3605,
++    "line": 3609,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -520,9 +520,9 @@
+   {
+     "route": "/api/v1/isabella/mediate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3796",
++    "handler": "inline@src/server.ts:3800",
+     "verified": true,
+-    "line": 3796,
++    "line": 3800,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -534,9 +534,9 @@
+   {
+     "route": "/api/v1/isabella/entropy",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3853",
++    "handler": "inline@src/server.ts:3857",
+     "verified": false,
+-    "line": 3853,
++    "line": 3857,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -548,9 +548,9 @@
+   {
+     "route": "/api/v1/isabella/rag/add",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3882",
++    "handler": "inline@src/server.ts:3886",
+     "verified": false,
+-    "line": 3882,
++    "line": 3886,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -562,9 +562,9 @@
+   {
+     "route": "/api/v1/isabella/rag/search",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:3895",
++    "handler": "inline@src/server.ts:3899",
+     "verified": false,
+-    "line": 3895,
++    "line": 3899,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -576,9 +576,9 @@
+   {
+     "route": "/api/v1/domains/search",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3901",
++    "handler": "inline@src/server.ts:3905",
+     "verified": false,
+-    "line": 3901,
++    "line": 3905,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -590,9 +590,9 @@
+   {
+     "route": "/api/v1/security/intent",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3920",
++    "handler": "inline@src/server.ts:3924",
+     "verified": false,
+-    "line": 3920,
++    "line": 3924,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -604,9 +604,9 @@
+   {
+     "route": "/api/v1/security/prompt-guard",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3926",
++    "handler": "inline@src/server.ts:3930",
+     "verified": false,
+-    "line": 3926,
++    "line": 3930,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -618,9 +618,9 @@
+   {
+     "route": "/api/v1/security/threat-intel",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3932",
++    "handler": "inline@src/server.ts:3936",
+     "verified": false,
+-    "line": 3932,
++    "line": 3936,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -632,9 +632,9 @@
+   {
+     "route": "/api/v1/isabella/providers",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:3938",
++    "handler": "inline@src/server.ts:3942",
+     "verified": false,
+-    "line": 3938,
++    "line": 3942,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -646,9 +646,9 @@
+   {
+     "route": "/api/mcp",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:3948",
++    "handler": "inline@src/server.ts:3952",
+     "verified": false,
+-    "line": 3948,
++    "line": 3952,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -660,9 +660,9 @@
+   {
+     "route": "/api/v1/i18n/locale",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4048",
++    "handler": "inline@src/server.ts:4052",
+     "verified": false,
+-    "line": 4048,
++    "line": 4052,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -674,9 +674,9 @@
+   {
+     "route": "/api/isabella/chat",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4058",
++    "handler": "inline@src/server.ts:4062",
+     "verified": false,
+-    "line": 4058,
++    "line": 4062,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -688,9 +688,9 @@
+   {
+     "route": "/api/isabella/isa/reason",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4088",
++    "handler": "inline@src/server.ts:4092",
+     "verified": false,
+-    "line": 4088,
++    "line": 4092,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -702,9 +702,9 @@
+   {
+     "route": "/api/isabella/crypto/sign",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4105",
++    "handler": "inline@src/server.ts:4109",
+     "verified": false,
+-    "line": 4105,
++    "line": 4109,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -716,9 +716,9 @@
+   {
+     "route": "/api/isabella/crypto/verify",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4123",
++    "handler": "inline@src/server.ts:4127",
+     "verified": false,
+-    "line": 4123,
++    "line": 4127,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -730,9 +730,9 @@
+   {
+     "route": "/api/v1/memory/store",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4137",
++    "handler": "inline@src/server.ts:4141",
+     "verified": true,
+-    "line": 4137,
++    "line": 4141,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -744,9 +744,9 @@
+   {
+     "route": "/api/v1/memory/recall",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4155",
++    "handler": "inline@src/server.ts:4159",
+     "verified": true,
+-    "line": 4155,
++    "line": 4159,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -758,9 +758,9 @@
+   {
+     "route": "/api/v1/memory/snapshot",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4163",
++    "handler": "inline@src/server.ts:4167",
+     "verified": true,
+-    "line": 4163,
++    "line": 4167,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -772,9 +772,9 @@
+   {
+     "route": "/api/v1/isabella/full-status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4169",
++    "handler": "inline@src/server.ts:4173",
+     "verified": false,
+-    "line": 4169,
++    "line": 4173,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -786,9 +786,9 @@
+   {
+     "route": "/api/v1/isabella/eval",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4182",
++    "handler": "inline@src/server.ts:4186",
+     "verified": false,
+-    "line": 4182,
++    "line": 4186,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -800,9 +800,9 @@
+   {
+     "route": "/api/v1/security/canonicalize",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4206",
++    "handler": "inline@src/server.ts:4210",
+     "verified": false,
+-    "line": 4206,
++    "line": 4210,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -814,9 +814,9 @@
+   {
+     "route": "/api/v1/governance/review/submit",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4217",
++    "handler": "inline@src/server.ts:4221",
+     "verified": false,
+-    "line": 4217,
++    "line": 4221,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -828,9 +828,9 @@
+   {
+     "route": "/api/v1/governance/review/:id/approve",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4229",
++    "handler": "inline@src/server.ts:4233",
+     "verified": false,
+-    "line": 4229,
++    "line": 4233,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -842,9 +842,9 @@
+   {
+     "route": "/api/v1/governance/review/:id/reject",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4240",
++    "handler": "inline@src/server.ts:4244",
+     "verified": false,
+-    "line": 4240,
++    "line": 4244,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -856,9 +856,9 @@
+   {
+     "route": "/api/v1/governance/review",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4251",
++    "handler": "inline@src/server.ts:4255",
+     "verified": false,
+-    "line": 4251,
++    "line": 4255,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -870,9 +870,9 @@
+   {
+     "route": "/api/v1/isabella/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4257",
++    "handler": "inline@src/server.ts:4261",
+     "verified": false,
+-    "line": 4257,
++    "line": 4261,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -884,9 +884,9 @@
+   {
+     "route": "/api/v1/isabella/foundational",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4266",
++    "handler": "inline@src/server.ts:4270",
+     "verified": false,
+-    "line": 4266,
++    "line": 4270,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -898,9 +898,9 @@
+   {
+     "route": "/api/v1/hsf/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4292",
++    "handler": "inline@src/server.ts:4296",
+     "verified": false,
+-    "line": 4292,
++    "line": 4296,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -912,9 +912,9 @@
+   {
+     "route": "/api/v1/hsf/invoke",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4311",
++    "handler": "inline@src/server.ts:4315",
+     "verified": false,
+-    "line": 4311,
++    "line": 4315,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -926,9 +926,9 @@
+   {
+     "route": "/api/v1/quantum/pennylane/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4400",
++    "handler": "inline@src/server.ts:4404",
+     "verified": false,
+-    "line": 4400,
++    "line": 4404,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -940,9 +940,9 @@
+   {
+     "route": "/api/v1/quantum/pennylane/execute",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4412",
++    "handler": "inline@src/server.ts:4416",
+     "verified": false,
+-    "line": 4412,
++    "line": 4416,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -954,9 +954,9 @@
+   {
+     "route": "/api/v1/triple-blockade/scan",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4475",
++    "handler": "inline@src/server.ts:4479",
+     "verified": false,
+-    "line": 4475,
++    "line": 4479,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -968,9 +968,9 @@
+   {
+     "route": "/api/v1/notebook/generate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4514",
++    "handler": "inline@src/server.ts:4518",
+     "verified": false,
+-    "line": 4514,
++    "line": 4518,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -982,9 +982,9 @@
+   {
+     "route": "/api/v1/audio-overview/generate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4585",
++    "handler": "inline@src/server.ts:4589",
+     "verified": false,
+-    "line": 4585,
++    "line": 4589,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -996,9 +996,9 @@
+   {
+     "route": "/api/v1/territory/rdm",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:4636",
++    "handler": "inline@src/server.ts:4640",
+     "verified": false,
+-    "line": 4636,
++    "line": 4640,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1010,9 +1010,9 @@
+   {
+     "route": "/api/v1/sanitization/scan",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4681",
++    "handler": "inline@src/server.ts:4685",
+     "verified": false,
+-    "line": 4681,
++    "line": 4685,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1024,9 +1024,9 @@
+   {
+     "route": "/api/v1/knowledge/admit",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4706",
++    "handler": "inline@src/server.ts:4710",
+     "verified": false,
+-    "line": 4706,
++    "line": 4710,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1038,9 +1038,9 @@
+   {
+     "route": "/api/v1/governance/git",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4845",
++    "handler": "inline@src/server.ts:4849",
+     "verified": false,
+-    "line": 4845,
++    "line": 4849,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1052,9 +1052,9 @@
+   {
+     "route": "/api/v1/governance/quality-gates",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4856",
++    "handler": "inline@src/server.ts:4860",
+     "verified": false,
+-    "line": 4856,
++    "line": 4860,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1066,9 +1066,9 @@
+   {
+     "route": "/api/v1/governance/deployment",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4877",
++    "handler": "inline@src/server.ts:4881",
+     "verified": false,
+-    "line": 4877,
++    "line": 4881,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1080,9 +1080,9 @@
+   {
+     "route": "/api/v1/governance/verify-agent-app",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4897",
++    "handler": "inline@src/server.ts:4901",
+     "verified": false,
+-    "line": 4897,
++    "line": 4901,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1094,9 +1094,9 @@
+   {
+     "route": "/api/v1/governance/lifecycle-plan",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4930",
++    "handler": "inline@src/server.ts:4934",
+     "verified": false,
+-    "line": 4930,
++    "line": 4934,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1108,9 +1108,9 @@
+   {
+     "route": "/api/v1/diff/observe",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4941",
++    "handler": "inline@src/server.ts:4945",
+     "verified": false,
+-    "line": 4941,
++    "line": 4945,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1122,9 +1122,9 @@
+   {
+     "route": "/api/v1/sanitization/harden",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4974",
++    "handler": "inline@src/server.ts:4978",
+     "verified": false,
+-    "line": 4974,
++    "line": 4978,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1136,9 +1136,9 @@
+   {
+     "route": "/api/v1/security/triangulate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:4989",
++    "handler": "inline@src/server.ts:4993",
+     "verified": false,
+-    "line": 4989,
++    "line": 4993,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1150,9 +1150,9 @@
+   {
+     "route": "/api/v1/ops/readiness",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5100",
++    "handler": "inline@src/server.ts:5104",
+     "verified": false,
+-    "line": 5100,
++    "line": 5104,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1164,9 +1164,9 @@
+   {
+     "route": "/api/v1/readyz",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5117",
++    "handler": "inline@src/server.ts:5121",
+     "verified": true,
+-    "line": 5117,
++    "line": 5121,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1178,9 +1178,9 @@
+   {
+     "route": "/api/v1/ops/snapshot",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5129",
++    "handler": "inline@src/server.ts:5133",
+     "verified": false,
+-    "line": 5129,
++    "line": 5133,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1192,9 +1192,9 @@
+   {
+     "route": "/api/v1/integrations/graph",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5139",
++    "handler": "inline@src/server.ts:5143",
+     "verified": false,
+-    "line": 5139,
++    "line": 5143,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1206,9 +1206,9 @@
+   {
+     "route": "/api/v1/ops/latency",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5326",
++    "handler": "inline@src/server.ts:5330",
+     "verified": false,
+-    "line": 5326,
++    "line": 5330,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1220,9 +1220,9 @@
+   {
+     "route": "/api/v1/isa/pipeline",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5338",
++    "handler": "inline@src/server.ts:5342",
+     "verified": true,
+-    "line": 5338,
++    "line": 5342,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1234,9 +1234,9 @@
+   {
+     "route": "/api/v1/isa/act",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5352",
++    "handler": "inline@src/server.ts:5356",
+     "verified": true,
+-    "line": 5352,
++    "line": 5356,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1248,9 +1248,9 @@
+   {
+     "route": "/api/v1/litle/attest",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5386",
++    "handler": "inline@src/server.ts:5390",
+     "verified": false,
+-    "line": 5386,
++    "line": 5390,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1262,9 +1262,9 @@
+   {
+     "route": "/api/v1/litle/verify",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5459",
++    "handler": "inline@src/server.ts:5463",
+     "verified": false,
+-    "line": 5459,
++    "line": 5463,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1276,9 +1276,9 @@
+   {
+     "route": "/api/v1/connectors/ingest",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5557",
++    "handler": "inline@src/server.ts:5561",
+     "verified": false,
+-    "line": 5557,
++    "line": 5561,
+     "sensitive": true,
+     "controls": {
+       "auth": false,
+@@ -1290,9 +1290,9 @@
+   {
+     "route": "/api/v1/metrics",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5658",
++    "handler": "inline@src/server.ts:5662",
+     "verified": false,
+-    "line": 5658,
++    "line": 5662,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1304,9 +1304,9 @@
+   {
+     "route": "/api/v1/runtime/capabilities",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5670",
++    "handler": "inline@src/server.ts:5674",
+     "verified": false,
+-    "line": 5670,
++    "line": 5674,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1318,9 +1318,9 @@
+   {
+     "route": "/api/v1/memory/verified",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5701",
++    "handler": "inline@src/server.ts:5705",
+     "verified": true,
+-    "line": 5701,
++    "line": 5705,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1332,9 +1332,9 @@
+   {
+     "route": "/api/v1/memory/verified",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5728",
++    "handler": "inline@src/server.ts:5732",
+     "verified": true,
+-    "line": 5728,
++    "line": 5732,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1346,9 +1346,9 @@
+   {
+     "route": "/api/v1/osiris/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5745",
++    "handler": "inline@src/server.ts:5749",
+     "verified": false,
+-    "line": 5745,
++    "line": 5749,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1360,9 +1360,9 @@
+   {
+     "route": "/api/v1/osiris/inspect",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5750",
++    "handler": "inline@src/server.ts:5754",
+     "verified": false,
+-    "line": 5750,
++    "line": 5754,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1374,9 +1374,9 @@
+   {
+     "route": "/api/v1/billing/prices",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5821",
++    "handler": "inline@src/server.ts:5825",
+     "verified": false,
+-    "line": 5821,
++    "line": 5825,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1388,9 +1388,9 @@
+   {
+     "route": "/api/v1/billing/plans",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5848",
++    "handler": "inline@src/server.ts:5852",
+     "verified": false,
+-    "line": 5848,
++    "line": 5852,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1402,9 +1402,9 @@
+   {
+     "route": "/api/v1/billing/entitlements",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5865",
++    "handler": "inline@src/server.ts:5869",
+     "verified": false,
+-    "line": 5865,
++    "line": 5869,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -1416,9 +1416,9 @@
+   {
+     "route": "/api/v1/billing/subscription",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5880",
++    "handler": "inline@src/server.ts:5884",
+     "verified": false,
+-    "line": 5880,
++    "line": 5884,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1430,9 +1430,9 @@
+   {
+     "route": "/api/v1/billing/subscribe",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5892",
++    "handler": "inline@src/server.ts:5896",
+     "verified": false,
+-    "line": 5892,
++    "line": 5896,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1444,9 +1444,9 @@
+   {
+     "route": "/api/v1/billing/cancel",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5939",
++    "handler": "inline@src/server.ts:5943",
+     "verified": false,
+-    "line": 5939,
++    "line": 5943,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1458,9 +1458,9 @@
+   {
+     "route": "/api/v1/billing/usage",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:5968",
++    "handler": "inline@src/server.ts:5972",
+     "verified": false,
+-    "line": 5968,
++    "line": 5972,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1472,9 +1472,9 @@
+   {
+     "route": "/api/v1/commerce/offers",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:5986",
++    "handler": "inline@src/server.ts:5990",
+     "verified": false,
+-    "line": 5986,
++    "line": 5990,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1486,9 +1486,9 @@
+   {
+     "route": "/api/v1/gameover/constitution",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6039",
++    "handler": "inline@src/server.ts:6043",
+     "verified": false,
+-    "line": 6039,
++    "line": 6043,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1500,9 +1500,9 @@
+   {
+     "route": "/api/v1/gameover/passports",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6044",
++    "handler": "inline@src/server.ts:6048",
+     "verified": false,
+-    "line": 6044,
++    "line": 6048,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1514,9 +1514,9 @@
+   {
+     "route": "/api/v1/gameover/passports",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6056",
++    "handler": "inline@src/server.ts:6060",
+     "verified": false,
+-    "line": 6056,
++    "line": 6060,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1528,9 +1528,9 @@
+   {
+     "route": "/api/v1/gameover/passports/revoke",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6096",
++    "handler": "inline@src/server.ts:6100",
+     "verified": false,
+-    "line": 6096,
++    "line": 6100,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1542,9 +1542,9 @@
+   {
+     "route": "/api/v1/gameover/govern",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6114",
++    "handler": "inline@src/server.ts:6118",
+     "verified": false,
+-    "line": 6114,
++    "line": 6118,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1556,9 +1556,9 @@
+   {
+     "route": "/api/v1/gateway/activity",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6282",
++    "handler": "inline@src/server.ts:6286",
+     "verified": false,
+-    "line": 6282,
++    "line": 6286,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1570,9 +1570,9 @@
+   {
+     "route": "/api/v1/memory/stats",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6681",
++    "handler": "inline@src/server.ts:6707",
+     "verified": true,
+-    "line": 6681,
++    "line": 6707,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1584,9 +1584,9 @@
+   {
+     "route": "/api/v1/memory/query",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6686",
++    "handler": "inline@src/server.ts:6712",
+     "verified": true,
+-    "line": 6686,
++    "line": 6712,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1598,9 +1598,9 @@
+   {
+     "route": "/api/v1/security/authenticate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6697",
++    "handler": "inline@src/server.ts:6723",
+     "verified": true,
+-    "line": 6697,
++    "line": 6723,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1612,9 +1612,9 @@
+   {
+     "route": "/api/v1/security/audit",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6707",
++    "handler": "inline@src/server.ts:6733",
+     "verified": false,
+-    "line": 6707,
++    "line": 6733,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1626,9 +1626,9 @@
+   {
+     "route": "/api/v1/governance/evaluate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6714",
++    "handler": "inline@src/server.ts:6740",
+     "verified": false,
+-    "line": 6714,
++    "line": 6740,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1640,9 +1640,9 @@
+   {
+     "route": "/api/v1/governance/audit",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6724",
++    "handler": "inline@src/server.ts:6750",
+     "verified": false,
+-    "line": 6724,
++    "line": 6750,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1654,9 +1654,9 @@
+   {
+     "route": "/api/v1/learning/train",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6739",
++    "handler": "inline@src/server.ts:6765",
+     "verified": true,
+-    "line": 6739,
++    "line": 6765,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1668,9 +1668,9 @@
+   {
+     "route": "/api/v1/observability/metrics",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6776",
++    "handler": "inline@src/server.ts:6802",
+     "verified": false,
+-    "line": 6776,
++    "line": 6802,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1682,9 +1682,9 @@
+   {
+     "route": "/api/v1/observability/health",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6782",
++    "handler": "inline@src/server.ts:6808",
+     "verified": false,
+-    "line": 6782,
++    "line": 6808,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1696,9 +1696,9 @@
+   {
+     "route": "/api/v1/observability/slos",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6788",
++    "handler": "inline@src/server.ts:6814",
+     "verified": false,
+-    "line": 6788,
++    "line": 6814,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1710,9 +1710,9 @@
+   {
+     "route": "/api/v1/observability/alerts",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6794",
++    "handler": "inline@src/server.ts:6820",
+     "verified": false,
+-    "line": 6794,
++    "line": 6820,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1724,9 +1724,9 @@
+   {
+     "route": "/api/v1/observability/dashboards",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6806",
++    "handler": "inline@src/server.ts:6832",
+     "verified": false,
+-    "line": 6806,
++    "line": 6832,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1738,9 +1738,9 @@
+   {
+     "route": "/api/v1/federation/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6816",
++    "handler": "inline@src/server.ts:6842",
+     "verified": false,
+-    "line": 6816,
++    "line": 6842,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1752,9 +1752,9 @@
+   {
+     "route": "/api/v1/federation/telemetry",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6821",
++    "handler": "inline@src/server.ts:6847",
+     "verified": false,
+-    "line": 6821,
++    "line": 6847,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1766,9 +1766,9 @@
+   {
+     "route": "/api/v1/federation/cross",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6826",
++    "handler": "inline@src/server.ts:6852",
+     "verified": true,
+-    "line": 6826,
++    "line": 6852,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1780,9 +1780,9 @@
+   {
+     "route": "/api/v1/pipeline/metrics",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6843",
++    "handler": "inline@src/server.ts:6869",
+     "verified": false,
+-    "line": 6843,
++    "line": 6869,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1794,9 +1794,9 @@
+   {
+     "route": "/api/v1/pipeline/stats/hot",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6848",
++    "handler": "inline@src/server.ts:6874",
+     "verified": false,
+-    "line": 6848,
++    "line": 6874,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1808,9 +1808,9 @@
+   {
+     "route": "/api/v1/pipeline/stats/cold",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6853",
++    "handler": "inline@src/server.ts:6879",
+     "verified": false,
+-    "line": 6853,
++    "line": 6879,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1822,9 +1822,9 @@
+   {
+     "route": "/api/v1/platform/capabilities",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6859",
++    "handler": "inline@src/server.ts:6885",
+     "verified": false,
+-    "line": 6859,
++    "line": 6885,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1836,9 +1836,9 @@
+   {
+     "route": "/api/v1/evidence-graph/append",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6864",
++    "handler": "inline@src/server.ts:6890",
+     "verified": true,
+-    "line": 6864,
++    "line": 6890,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1850,9 +1850,9 @@
+   {
+     "route": "/api/v1/evidence-graph/verify",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6885",
++    "handler": "inline@src/server.ts:6911",
+     "verified": false,
+-    "line": 6885,
++    "line": 6911,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1864,9 +1864,9 @@
+   {
+     "route": "/api/v1/temporal/record",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6894",
++    "handler": "inline@src/server.ts:6920",
+     "verified": false,
+-    "line": 6894,
++    "line": 6920,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1878,9 +1878,9 @@
+   {
+     "route": "/api/v1/temporal/versions",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6908",
++    "handler": "inline@src/server.ts:6934",
+     "verified": false,
+-    "line": 6908,
++    "line": 6934,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1892,9 +1892,9 @@
+   {
+     "route": "/api/v1/citemesh/publish",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6918",
++    "handler": "inline@src/server.ts:6944",
+     "verified": false,
+-    "line": 6918,
++    "line": 6944,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1906,9 +1906,9 @@
+   {
+     "route": "/api/v1/citemesh/replay",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:6935",
++    "handler": "inline@src/server.ts:6961",
+     "verified": false,
+-    "line": 6935,
++    "line": 6961,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -1920,9 +1920,9 @@
+   {
+     "route": "/api/v1/cognitive-capital/list",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6946",
++    "handler": "inline@src/server.ts:6972",
+     "verified": false,
+-    "line": 6946,
++    "line": 6972,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1934,9 +1934,9 @@
+   {
+     "route": "/api/v1/cognitive-capital/trade",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6968",
++    "handler": "inline@src/server.ts:6994",
+     "verified": false,
+-    "line": 6968,
++    "line": 6994,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1948,9 +1948,9 @@
+   {
+     "route": "/api/v1/immune/report",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6984",
++    "handler": "inline@src/server.ts:7010",
+     "verified": false,
+-    "line": 6984,
++    "line": 7010,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1962,9 +1962,9 @@
+   {
+     "route": "/api/v1/immune/assess",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:6999",
++    "handler": "inline@src/server.ts:7025",
+     "verified": false,
+-    "line": 6999,
++    "line": 7025,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1976,9 +1976,9 @@
+   {
+     "route": "/api/v1/fabric/execute",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7014",
++    "handler": "inline@src/server.ts:7040",
+     "verified": false,
+-    "line": 7014,
++    "line": 7040,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -1990,9 +1990,9 @@
+   {
+     "route": "/api/v1/monetization/plans",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:7031",
++    "handler": "inline@src/server.ts:7057",
+     "verified": false,
+-    "line": 7031,
++    "line": 7057,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -2004,9 +2004,9 @@
+   {
+     "route": "/api/v1/monetization/escrow",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7036",
++    "handler": "inline@src/server.ts:7062",
+     "verified": false,
+-    "line": 7036,
++    "line": 7062,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2018,9 +2018,9 @@
+   {
+     "route": "/api/v1/monetization/escrow/release",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7052",
++    "handler": "inline@src/server.ts:7078",
+     "verified": false,
+-    "line": 7052,
++    "line": 7078,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2032,9 +2032,9 @@
+   {
+     "route": "/api/v1/monetization/payout",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7063",
++    "handler": "inline@src/server.ts:7089",
+     "verified": false,
+-    "line": 7063,
++    "line": 7089,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2046,9 +2046,9 @@
+   {
+     "route": "/api/v1/monetization/scer-split",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7079",
++    "handler": "inline@src/server.ts:7105",
+     "verified": false,
+-    "line": 7079,
++    "line": 7105,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2060,9 +2060,9 @@
+   {
+     "route": "/api/v1/pricing/dynamic",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7090",
++    "handler": "inline@src/server.ts:7116",
+     "verified": false,
+-    "line": 7090,
++    "line": 7116,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2074,9 +2074,9 @@
+   {
+     "route": "/api/v1/monetization/stats",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:7106",
++    "handler": "inline@src/server.ts:7132",
+     "verified": false,
+-    "line": 7106,
++    "line": 7132,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -2088,9 +2088,9 @@
+   {
+     "route": "/api/v1/monetization/profit-price",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7115",
++    "handler": "inline@src/server.ts:7141",
+     "verified": false,
+-    "line": 7115,
++    "line": 7141,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2102,9 +2102,9 @@
+   {
+     "route": "/api/v1/ops/preflight",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:7135",
++    "handler": "inline@src/server.ts:7161",
+     "verified": false,
+-    "line": 7135,
++    "line": 7161,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -2116,9 +2116,9 @@
+   {
+     "route": "/api/v1/reina/status",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:7161",
++    "handler": "inline@src/server.ts:7187",
+     "verified": false,
+-    "line": 7161,
++    "line": 7187,
+     "sensitive": false,
+     "controls": {
+       "auth": false,
+@@ -2130,9 +2130,9 @@
+   {
+     "route": "/api/v1/reina/adjudicate",
+     "method": "POST",
+-    "handler": "inline@src/server.ts:7175",
++    "handler": "inline@src/server.ts:7201",
+     "verified": true,
+-    "line": 7175,
++    "line": 7201,
+     "sensitive": true,
+     "controls": {
+       "auth": true,
+@@ -2144,9 +2144,9 @@
+   {
+     "route": "/api/v1/reina/log/proof/:index",
+     "method": "GET",
+-    "handler": "inline@src/server.ts:7205",
++    "handler": "inline@src/server.ts:7231",
+     "verified": false,
+-    "line": 7205,
++    "line": 7231,
+     "sensitive": false,
+     "controls": {
+       "auth": true,
+@@ -3387,6 +3387,118 @@
+     },
+     "verificationBasis": "test:test/routes/marketplace.test.ts"
+   },
++  {
++    "route": "/api/v1/music/status",
++    "method": "GET",
++    "handler": "inline@src/routes/music.ts:149",
++    "verified": true,
++    "line": 149,
++    "sensitive": false,
++    "controls": {
++      "auth": false,
++      "rateLimit": false,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/genres",
++    "method": "GET",
++    "handler": "inline@src/routes/music.ts:168",
++    "verified": true,
++    "line": 168,
++    "sensitive": false,
++    "controls": {
++      "auth": false,
++      "rateLimit": false,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/plan",
++    "method": "POST",
++    "handler": "inline@src/routes/music.ts:188",
++    "verified": true,
++    "line": 188,
++    "sensitive": true,
++    "controls": {
++      "auth": true,
++      "rateLimit": true,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/compose",
++    "method": "POST",
++    "handler": "inline@src/routes/music.ts:213",
++    "verified": true,
++    "line": 213,
++    "sensitive": true,
++    "controls": {
++      "auth": true,
++      "rateLimit": true,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/analyze",
++    "method": "POST",
++    "handler": "inline@src/routes/music.ts:248",
++    "verified": true,
++    "line": 248,
++    "sensitive": true,
++    "controls": {
++      "auth": true,
++      "rateLimit": true,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/master",
++    "method": "POST",
++    "handler": "inline@src/routes/music.ts:272",
++    "verified": true,
++    "line": 272,
++    "sensitive": true,
++    "controls": {
++      "auth": true,
++      "rateLimit": true,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/generate",
++    "method": "POST",
++    "handler": "inline@src/routes/music.ts:312",
++    "verified": true,
++    "line": 312,
++    "sensitive": true,
++    "controls": {
++      "auth": true,
++      "rateLimit": true,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
++  {
++    "route": "/api/v1/music/tasks/:taskId",
++    "method": "GET",
++    "handler": "inline@src/routes/music.ts:368",
++    "verified": true,
++    "line": 368,
++    "sensitive": false,
++    "controls": {
++      "auth": false,
++      "rateLimit": false,
++      "inputValidation": false
++    },
++    "verificationBasis": "test:test/routes/music.test.ts"
++  },
+   {
+     "route": "/api/v1/native/engines",
+     "method": "GET",
+diff --git a/src/server.ts b/src/server.ts
+index 0e8a1d8..aef5abe 100644
+--- a/src/server.ts
++++ b/src/server.ts
+@@ -228,6 +228,7 @@ import { createIvccRuntimeFromEnv } from './ivcc';
+ import { GenesisTtsEngine } from './tts/engine';
+ import { registerTrafficLightRoutes } from './routes/traffic-light';
+ import { registerTamvRoutes } from './routes/tamv';
++import { registerMusicRoutes } from './routes/music';
+ import { registerCivilizationRoutes } from './routes/civilization';
+ import { registerHfHubRoutes } from './routes/hf-hub';
+ import { registerIhecRoutes } from './routes/ihec';
+@@ -1500,6 +1501,9 @@ const linguisticsLimiter = new FixedWindowRateLimiter(20, 60_000);
+ // CPU por instancia, no de cortesía: 8 análisis/min por cliente es el techo razonable
+ // en serverless antes de que el request entre en timeout.
+ const tamvAudioLimiter = new FixedWindowRateLimiter(8, 60_000);
++// TAMV Music Genesis: composición determinista y mastering LUFS sobre WAV. Mismo techo
++// de CPU por instancia que el Kaos Audio System (8 requests/min por cliente).
++const musicLimiter = new FixedWindowRateLimiter(8, 60_000);
+ // Evaluadores sin estado y sin escritura, pero cada solicitud recorre 12 etapas de gobernanza
+ // o valida controles obligatorios: el costo es CPU, así que también llevan techo propio.
+ const isaEvaluatorLimiter = new FixedWindowRateLimiter(10, 60_000);
+@@ -6469,6 +6473,28 @@ registerTamvRoutes({
+   },
+ });
+ 
++// ── TAMV Music Genesis (state: draft | engine-generated) ─ compone arreglos deterministas
++// (MIDI formato 1 real), mide loudness LUFS BS.1770-4 y true-peak, y masteriza WAV real.
++// La generación con proveedores externos es opcional y fail-closed sin credenciales.
++// Componer/masterizar NO autoriza ni ejecuta: CROWN sigue autorizando y BookPI evidencia.
++registerMusicRoutes({
++  app,
++  enforceRateLimit,
++  rateLimiter: musicLimiter,
++  authorizeAdmin: (req, res) => authorizeApiToken(req, res, 'GENESIS_ADMIN_API_TOKEN'),
++  recordEvidence: (event) => {
++    bookPiLedger.append({
++      id: `music-${event.detailId}-${randomUUID().slice(0, 8)}`,
++      timestamp: new Date().toISOString(),
++      type: event.type,
++      methodId: event.methodId,
++      principal: event.principal,
++      riskTier: event.riskTier,
++      status: event.status,
++    });
++  },
++});
++
+ // ── Governed Flow Traffic Light Ω (state: draft | engine-generated) ─ clasifica la
+ // solicitud en verde/amarillo/naranja/rojo y decide qué filtros gobernados corren
+ // (vía rápida gobernada, filtrado, gobierno reforzado o revisión humana). Clasificar
+diff --git a/test/deployment/route-inventory.json b/test/deployment/route-inventory.json
+index 7f6fff1..610b3b5 100644
+--- a/test/deployment/route-inventory.json
++++ b/test/deployment/route-inventory.json
+@@ -81,6 +81,9 @@
+   "GET /api/v1/metrics",
+   "GET /api/v1/monetization/plans",
+   "GET /api/v1/monetization/stats",
++  "GET /api/v1/music/genres",
++  "GET /api/v1/music/status",
++  "GET /api/v1/music/tasks/:taskId",
+   "GET /api/v1/native/engines",
+   "GET /api/v1/native/llm/status",
+   "GET /api/v1/nexus",
+@@ -262,6 +265,11 @@
+   "POST /api/v1/monetization/payout",
+   "POST /api/v1/monetization/profit-price",
+   "POST /api/v1/monetization/scer-split",
++  "POST /api/v1/music/analyze",
++  "POST /api/v1/music/compose",
++  "POST /api/v1/music/generate",
++  "POST /api/v1/music/master",
++  "POST /api/v1/music/plan",
+   "POST /api/v1/native/llm/generate",
+   "POST /api/v1/native/moe/diagnostics",
+   "POST /api/v1/nexus/ask",

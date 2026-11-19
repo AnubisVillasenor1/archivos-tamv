@@ -1,0 +1,1027 @@
+ERR 
+ RUN  v5.0.5 C:/Users/tamvo/Downloads/isabella-anubis
+
+ ✓ test/nexus/capability.test.ts (33 tests) 431ms
+ ✓ test/nexus/open-agent-fabric.test.ts (21 tests) 491ms
+ ✓ test/security/triangulated-crypto.test.ts (5 tests) 1497ms
+   ✓ triangulated crypto (5)
+     ✓ derives keys with scrypt and rejects short passphrases 736ms
+     ✓ seals and opens envelopes, rejecting wrong key/AAD/tamper 738ms
+ ✓ test/tts/engine.test.ts (19 tests) 282ms
+ ✓ test/tts/native-e2e.test.ts (3 tests) 610ms
+ ✓ test/routes/tts.test.ts (10 tests) 663ms
+ ✓ test/routes/ivcc.test.ts (8 tests) 616ms
+   ✓ IVCC HTTP surface (8)
+     ✓ synthesizes audio and records evidence without claiming authority 415ms
+ ✓ test/ivcc/engine.test.ts (7 tests) 818ms
+   ✓ IVCC engine (7)
+     ✓ synthesizes, masters and watermarks real WAV output end to end 441ms
+ ✓ test/security/output-guard-http.test.ts (11 tests) 58ms
+ ✓ test/agents/sandbox.test.ts (8 tests) 232ms
+ ❯ test/deployment/readiness-consistency.test.ts (2 tests | 1 failed) 485ms
+   ❯ production-readiness reporting is evidence-based (2)
+     × the README publishes only the global percentage the instrument computes 480ms
+     ✓ never reintroduces unsupported legacy figures 1ms
+ ✓ test/ihec/engines.test.ts (13 tests) 35ms
+ ✓ test/routes/pipeline.test.ts (5 tests) 161ms
+ ✓ test/routes/infinity.test.ts (12 tests) 108ms
+ ✓ test/pipeline/conductor.test.ts (5 tests) 196ms
+ ✓ test/infinity/constitution-skills.test.ts (24 tests) 331ms
+ ✓ test/bookpi/storage-jsonl.test.ts (5 tests) 153ms
+ ✓ test/security/hybrid-symmetric.test.ts (4 tests) 38ms
+ ✓ test/litle.test.ts (7 tests) 207ms
+ ✓ test/hypercore/hypercore.test.ts (10 tests) 73ms
+ ✓ test/terminus/sharded-store.test.ts (8 tests) 95ms
+ ✓ test/governance/cognitive-governance-layer.test.ts (15 tests) 153ms
+ ✓ test/bookpi/storage-postgres.test.ts (5 tests) 62ms
+ ✓ test/civilization/runtime.test.ts (6 tests) 65ms
+ ✓ test/routes/civilization.test.ts (5 tests) 124ms
+ ✓ test/bookpi/legacy-verifier.test.ts (11 tests) 31ms
+ ✓ test/routes/ihec.test.ts (9 tests) 33ms
+ ✓ test/bookpi/emitter.test.ts (5 tests) 52ms
+ ✓ test/security/pqc-provider-gate.test.ts (6 tests) 49ms
+ ✓ test/bookpi/runtime-storage.test.ts (4 tests) 38ms
+ ✓ test/hsf.test.ts (10 tests) 43ms
+ ✓ test/ihec/ihec.test.ts (5 tests) 27ms
+ ✓ test/bookpi/crypto.test.ts (8 tests) 31ms
+ ✓ test/sanitization/hardening.test.ts (5 tests) 23ms
+ ✓ test/hypercore/governed-semantic-cache.test.ts (5 tests) 21ms
+ ✓ test/hypercore/canonical.test.ts (3 tests) 14ms
+ ❯ test/deployment/hardening-guards.test.ts (11 tests | 1 failed) 2902ms
+   ❯ operational hardening guards (6)
+     ✓ docker-compose carries no inline credentials and no obsolete `version` key 9ms
+     ✓ every internet-facing or log-reading service drops capabilities or limits memory 3ms
+     × .env.example has no duplicated keys, real-looking secrets or undocumented variables 1756ms
+     ✓ SOPS placeholders never coexist with a tracked encrypted file 697ms
+     ✓ docs/STATUS.md is regenerated from the repository (cannot drift from config) 374ms
+     ✓ every area excluded from the main typecheck is covered by tsconfig.layers.json or is a known standalone runtime 7ms
+   ✓ database migrations are deployable (5)
+     ✓ the table the runtime reads/writes (commerce_subscriptions) is created by a versioned migration 20ms
+     ✓ the in-source commerce migration cannot drift from the deployed copy 12ms
+     ✓ migration versions are unique and contiguous 3ms
+     ✓ docker-compose applies schema.sql and every versioned migration on first boot 6ms
+     ✓ scripts/migrate.sh points at a directory that exists 3ms
+ ✓ test/security/zero-trust-core.test.ts (12 tests) 3678ms
+   ✓ IdentityProvider credential verification (8)
+     ✓ accepts a matching scrypt password and rejects a wrong one 1000ms
+   ✓ ZeroTrustCore authentication (2)
+     ✓ creates a session only for fully valid credentials and denies by default 988ms
+     ✓ requires device proof and verifies it against the enrolled attestation 1578ms
+ ✓ test/deployment/route-inventory.test.ts (3 tests) 1928ms
+   ✓ route inventory contract (TD-01) (3)
+     ✓ matches the frozen HTTP surface exactly 1397ms
+     ✓ no route literal is registered across more than one module 483ms
+ ✓ test/deployment/verify-production.test.ts (3 tests) 1640ms
+   ✓ production verification (3)
+     ✓ returns false when the endpoint never becomes healthy 1327ms
+ ✓ test/tamv/dsp.test.ts (30 tests) 1532ms
+ ✓ test/routes/tamv.test.ts (20 tests) 793ms
+   ✓ TAMV rutas · gobernanza de los POST (11)
+     ✓ POST /api/v1/tamv/analyze registra su identidad de método al admitir trabajo real 320ms
+ ✓ test/bookpi/transparency.test.ts (11 tests) 1982ms
+   ✓ TransparencyLog (RFC 6962/9162) (9)
+     ✓ every inclusion proof verifies for every (index,size) up to 33 leaves 1088ms
+     ✓ every consistency proof verifies for every (m,n) up to 33 leaves 717ms
+ ✓ test/routes/music.test.ts (29 tests) 672ms
+ ✓ test/security/isabella-api-keys.test.ts (12 tests) 777ms
+   ✓ Isabella API key store (12)
+     ✓ keeps the MAX_KEYS ceiling 552ms
+ ✓ test/security/post-quantum.test.ts (6 tests) 663ms
+   ✓ post-quantum signing facade (6)
+     ✓ rejects non-Ed25519 keys 553ms
+stdout | test/security/postgres-api-key-persistence.test.ts > PostgresApiKeyPersistence > degrades on a hydration failure but keeps the backend for a retry
+[Isabella] API key hydration recovered { attempts: 2 }
+
+ ✓ test/security/postgres-api-key-persistence.test.ts (13 tests) 190ms
+ ✓ test/security/isa-x.revocation.test.ts (3 tests) 118ms
+ ✓ test/deployment/netlify-handler.test.ts (5 tests) 36972ms
+   ✓ Netlify Express adapter (5)
+     ✓ serves the workspace and its scripts without opening a listener 36473ms
+     ✓ serves health and preserves malformed JSON errors 333ms
+ ✓ test/deployment/production-smoke.test.ts (4 tests) 36713ms
+   ✓ post-deployment smoke (4)
+     ✓ verifies the runtime deployment surface end-to-end 521ms
+ ✓ test/security/isa-x.rotation.test.ts (1 test) 238ms
+ ✓ test/routes/llm-gateway.test.ts (7 tests) 142ms
+ ✓ test/routes/omega.test.ts (13 tests) 60ms
+ ✓ test/security/kill-switch.test.ts (5 tests) 80ms
+ ✓ test/security/document-seal-runtime.test.ts (6 tests) 222ms
+ ✓ test/routes/skill-catalog.test.ts (8 tests) 133ms
+ ✓ test/security/egress-policy.test.ts (29 tests) 390ms
+ ✓ test/routes/nexus.test.ts (23 tests) 1420ms
+ ✓ test/infinity/media-build-evolution.test.ts (19 tests) 186ms
+ ✓ test/omega-runtime/crypto.test.ts (3 tests) 819ms
+   ✓ ΩX-20 hybrid envelope readiness (3)
+     ✓ signs and verifies a canonical payload end-to-end 488ms
+ ✓ test/privacy/privacy.test.ts (11 tests) 2313ms
+   ✓ CryptoShredVault (5)
+     ✓ seals and opens; ciphertext is randomized and bound to subject 722ms
+   ✓ differential privacy (6)
+     ✓ secureUniform stays in (0,1) 639ms
+     ✓ laplace noise has ~zero mean and ~2b² variance 591ms
+ ✓ test/tamv/engine.test.ts (16 tests) 1256ms
+   ✓ TAMV motor · análisis de bytes reales (6)
+     ✓ la cota de CPU por request se aplica aunque el contenedor sea válido 596ms
+ ✓ test/terminus/erasure-code.test.ts (3 tests) 1096ms
+   ✓ Terminus Reed-Solomon 6-of-9 (3)
+     ✓ reconstructs the original bytes from every one of the 84 six-shard subsets 1066ms
+ ✓ test/privacy/pii-redactor.test.ts (9 tests) 588ms
+   ✓ ReDoS resistance (1)
+     ✓ scans adversarial 100KB inputs in bounded time 452ms
+ ✓ test/omega-runtime/runtime.test.ts (6 tests) 570ms
+ ✓ test/tamv/monitor.test.ts (11 tests) 363ms
+ ✓ test/inference/voice-profile.test.ts (7 tests) 473ms
+   ✓ voice profile (7)
+     ✓ measures F0 and pauses of a synthetic signal 424ms
+ ✓ test/inference/speech.integration.test.ts (4 tests) 541ms
+ ✓ test/tamv/analysis.test.ts (16 tests) 374ms
+ ✓ test/music/composition.test.ts (8 tests) 283ms
+ ✓ test/omega-runtime/server-integration.test.ts (5 tests) 43ms
+ ✓ test/plugins/diff-observatory.test.ts (5 tests) 227ms
+stdout | test/performance/critical-latency.test.ts > critical-path CPU latency baseline (no network or model inference) > benchmarks routing, canonicalization and readiness; emits p50/p95/p99
+[critical-latency-baseline] [{"name":"IGE routing","samples":500,"p50Ms":0.0099,"p95Ms":0.1334,"p99Ms":3.2508,"maxMs":15.4844},{"name":"Genesis canonical JSON + SHA-256","samples":500,"p50Ms":0.0538,"p95Ms":0.5229,"p99Ms":3.4827,"maxMs":16.5276},{"name":"Production readiness evaluation","samples":500,"p50Ms":0.0061,"p95Ms":0.0078,"p99Ms":0.0646,"maxMs":2.7351},{"name":"Canonical JSON serialization","samples":500,"p50Ms":0.0267,"p95Ms":0.1262,"p99Ms":1.1841,"maxMs":3.0924}]
+
+ ✓ test/performance/critical-latency.test.ts (1 test) 307ms
+ ✓ test/omega/genesis.test.ts (21 tests) 269ms
+ ✓ test/platform/omega-canon.test.ts (5 tests) 259ms
+ ✓ test/native-ml/hdc-memory.test.ts (14 tests) 368ms
+ ✓ test/omega-runtime/federation.test.ts (8 tests) 155ms
+ ✓ test/lib/capability-registry.test.ts (6 tests) 83ms
+ ✓ test/native-ml/native-ml.test.ts (7 tests) 123ms
+ ✓ test/economy/zero-loss-split.test.ts (3 tests) 1199ms
+   ✓ zero-loss revenue split · accounting invariant (3)
+     ✓ holds exactly for every gross/infrastructure combination 1176ms
+ ✓ test/ivcc/persistence.test.ts (3 tests) 388ms
+ ✓ test/inference/open-model-artifact.test.ts (10 tests) 465ms
+ ✓ test/bookpi/durable-ledger.test.ts (12 tests) 598ms
+ ✓ test/lib/skill-provenance-fs.test.ts (14 tests) 342ms
+stdout | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.078Z] [INFO] Trying provider: a/fake-a
+
+stdout | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.096Z] [INFO] Trying provider: b/fake-b
+
+stdout | test/inference/free-providers.test.ts > free provider router > returns the first provider that succeeds, in registration order
+[2026-11-12T10:09:25.120Z] [INFO] Trying provider: first/fake-first
+
+stdout | test/inference/free-providers.test.ts > free provider router > returns the first provider that succeeds, in registration order
+[2026-11-12T10:09:25.121Z] [INFO] Trying provider: second/ok-second
+
+stdout | test/inference/free-providers.test.ts > free provider router > returns the first provider that succeeds, in registration order
+[2026-11-12T10:09:25.122Z] [INFO] Provider succeeded: second {"latencyMs":1}
+
+ ✓ test/inference/free-providers.test.ts (7 tests) 800ms
+   ✓ free provider router (7)
+     ✓ aborts when a provider sends headers but stalls the response body 304ms
+ ✓ test/inference/multimodal.integration.test.ts (6 tests) 974ms
+   ✓ performVision over a real HTTP loopback (4)
+     ✓ understands an image through a local OpenAI-compatible server 340ms
+ ✓ test/evolution/catalog.test.ts (6 tests) 397ms
+ ✓ test/deployment/smoke-readiness-tier.test.ts (4 tests) 513ms
+ ✓ test/memory/ikes-supabase.test.ts (7 tests) 107ms
+ ✓ test/inference/foundational-llm.test.ts (8 tests) 121ms
+ ✓ test/music/dsp.test.ts (9 tests) 207ms
+ ✓ test/inference/speech.test.ts (8 tests) 185ms
+ ✓ test/ige-omega/gateway-probe.test.ts (8 tests) 201ms
+ ✓ test/tts/native-adapter-resilience.test.ts (6 tests) 107ms
+ ✓ test/skills/foundational.test.ts (7 tests) 106ms
+ ✓ test/governance/feature-flags.test.ts (5 tests) 140ms
+ ✓ test/atlasPersistence.test.ts (4 tests) 127ms
+ ✓ test/agents/mesh.test.ts (14 tests) 158ms
+ ✓ test/deployment/sbom-generator.test.ts (17 tests) 321ms
+ ✓ test/tamv/adaptive.test.ts (9 tests) 350ms
+ ✓ test/economy/settlement.test.ts (10 tests) 124ms
+ ✓ test/gifts/registry.test.ts (4 tests) 33ms
+ ✓ test/commerce/connector.test.ts (19 tests) 55ms
+ ✓ test/inference/deadline.test.ts (10 tests) 130ms
+ ✓ test/crown/facade.test.ts (7 tests) 42ms
+ ✓ test/governance/traffic-light.test.ts (10 tests) 171ms
+ ✓ test/tools/registry.test.ts (11 tests) 152ms
+ ✓ test/genesis-v6/security-cognition.test.ts (17 tests) 80ms
+ ✓ test/deployment/docker-artifacts.test.ts (11 tests) 79ms
+ ✓ test/memory/ikes-persistence.test.ts (8 tests) 129ms
+ ✓ test/deployment/production-ops.test.ts (17 tests) 65ms
+ ✓ test/ivcc/audio.test.ts (6 tests) 69ms
+ ✓ test/music/midi.test.ts (4 tests) 493ms
+   ✓ Music · exportador MIDI (4)
+     ✓ emite un archivo formato 1 multitrack con división de 480 ticks 320ms
+ ✓ test/memory/verified-knowledge.test.ts (7 tests) 101ms
+ ✓ test/governance/sync-manager.test.ts (11 tests) 108ms
+ ✓ test/economy/monetization-streams.test.ts (6 tests) 58ms
+ ✓ test/ivcc/layers.test.ts (5 tests) 163ms
+ ✓ test/security/secret-scanner.test.ts (2 tests) 60ms
+ ✓ test/skills/hypercore-engine.test.ts (11 tests) 74ms
+ ✓ test/tamv/plan.test.ts (13 tests) 110ms
+ ✓ test/companion/api-catalog-simulator.test.ts (5 tests) 17ms
+ ✓ test/osiris/posture.test.ts (4 tests) 50ms
+ ✓ test/platform/platform.test.ts (2 tests) 31ms
+stdout | test/federation/connectors.test.ts > native federation connectors > retries a failed hydration and recovers the durable rows
+[Isabella] Federation hydration recovered { attempts: 1 }
+
+ ✓ test/federation/connectors.test.ts (10 tests) 214ms
+ ✓ test/genesis-v6/runtime.test.ts (1 test) 84ms
+ ✓ test/omega-runtime/planning.test.ts (10 tests) 100ms
+ ✓ test/nexus/agent-loop.test.ts (6 tests) 55ms
+ ✓ test/music/pcm.test.ts (4 tests) 33ms
+ ✓ test/governance/blackout.test.ts (24 tests) 99ms
+ ✓ test/intelligence/turbo-planner.test.ts (9 tests) 47ms
+ ✓ test/economy/economy.test.ts (14 tests) 110ms
+ ✓ test/security/vigia.test.ts (6 tests) 39ms
+ ✓ test/agents/runtime.test.ts (9 tests) 71ms
+ ✓ test/commerce/catalog.test.ts (4 tests) 194ms
+ ✓ test/observability/slo.test.ts (6 tests) 264ms
+ ✓ test/governance/permission-map.test.ts (13 tests) 231ms
+ ✓ test/skills/registry.test.ts (4 tests) 134ms
+ ✓ test/bookpi/royalties.test.ts (4 tests) 99ms
+ ✓ test/ingress/request.test.ts (5 tests) 83ms
+ ✓ test/skills/evolved-bridge.test.ts (12 tests) 214ms
+ ✓ test/hf-hub/verified-references.test.ts (4 tests) 17ms
+ ✓ test/genesis/universe-snapshot.test.ts (10 tests) 48ms
+ ✓ test/evolution/engine.test.ts (5 tests) 163ms
+ ✓ test/tts/router-fairness.test.ts (5 tests) 19ms
+ ✓ test/commerce/entitlements.test.ts (10 tests) 22ms
+ ✓ test/omega/memory.test.ts (9 tests) 20ms
+ ✓ test/governance/blackout-routes.test.ts (14 tests) 246ms
+ ✓ test/skills/mcp-server.test.ts (6 tests) 108ms
+ ✓ test/skills/catalog.test.ts (11 tests) 274ms
+ ✓ test/cognition/moe.test.ts (24 tests) 47ms
+ ✓ test/native-ml/native-ml-foundations.test.ts (34 tests) 243ms
+ ✓ test/ingress/isa-api.test.ts (6 tests) 24ms
+ ✓ test/governance/quorum-autonomy-risk.test.ts (12 tests) 97ms
+ ✓ test/nexus/knowledge-graph.test.ts (5 tests) 34ms
+ ✓ test/hypercore/energy.test.ts (8 tests) 13ms
+ ✓ test/lib/skill-provenance.test.ts (21 tests) 96ms
+ ✓ test/infinity/architecture-catalog.test.ts (9 tests) 149ms
+ ✓ test/routes/federation.test.ts (4 tests) 65ms
+ ✓ test/skills/k8s-manifest.test.ts (5 tests) 33ms
+ ✓ test/memory/session-memory.test.ts (6 tests) 23ms
+ ✓ test/tenancy/isolation.test.ts (12 tests) 32ms
+ ✓ test/nexus/workflow.test.ts (5 tests) 47ms
+ ✓ test/omega-runtime/routing.test.ts (8 tests) 56ms
+ ✓ test/gameover/gateway.test.ts (15 tests) 70ms
+ ✓ test/gameover/human-approval-gate.test.ts (5 tests) 15ms
+ ✓ test/lib/aas-skill-catalog.test.ts (13 tests) 42ms
+ ✓ test/omega-runtime/security.test.ts (6 tests) 50ms
+ ✓ test/ivcc/consent.test.ts (7 tests) 95ms
+ ✓ test/sanitization/sanitization.test.ts (12 tests) 62ms
+ ✓ test/omega-runtime/memory.test.ts (9 tests) 35ms
+ ✓ test/audit/audit-2026-10-13.test.ts (5 tests) 225ms
+ ✓ test/commerce/locks.test.ts (11 tests) 16ms
+ ✓ test/tamv/presets.test.ts (10 tests) 43ms
+ ✓ test/deployment/deploy-gate.test.ts (16 tests) 38ms
+ ✓ test/bookpi/evidence-bundle.test.ts (5 tests) 93ms
+ ✓ test/omega-runtime/reasoning.test.ts (13 tests) 45ms
+ ✓ test/commerce/metering.test.ts (6 tests) 16ms
+ ✓ test/native-ml/native-ml-governance.test.ts (8 tests) 338ms
+ ✓ test/security/isa-x.signer.test.ts (7 tests) 57ms
+ ✓ test/terminus/retention.test.ts (12 tests) 33ms
+ ✓ test/gameover/passport-persistence.test.ts (5 tests) 115ms
+ ✓ test/veritas/grounding.test.ts (7 tests) 233ms
+ ✓ test/pipeline/task-graph.test.ts (9 tests) 53ms
+stdout | test/federation/postgres-federation-persistence.test.ts > PostgresFederationPersistence > degrades the registry without abandoning the backend after a hydration failure
+[Isabella] Federation hydration recovered { attempts: 2 }
+
+ ✓ test/federation/postgres-federation-persistence.test.ts (10 tests) 128ms
+ ✓ test/routes/governance-permissions.test.ts (6 tests) 95ms
+ ✓ test/economy/treasury.test.ts (11 tests) 113ms
+ ✓ test/resilience/resilience.test.ts (14 tests) 43ms
+ ✓ test/terminus/mandate.test.ts (7 tests) 36ms
+ ✓ test/orion/sandbox.test.ts (6 tests) 58ms
+ ✓ test/inference/multimodal.test.ts (15 tests) 22ms
+ ✓ test/bookpi/merkle.test.ts (6 tests) 35ms
+ ✓ test/inference/keyless-free-provider.test.ts (19 tests) 41ms
+ ✓ test/protocols/catalog.test.ts (8 tests) 76ms
+ ✓ test/gameover/audit.test.ts (2 tests) 52ms
+ ✓ test/security/document-seal.test.ts (8 tests) 41ms
+ ✓ test/health/dependency-readiness.test.ts (7 tests) 20ms
+ ✓ test/health/deploy-readiness.test.ts (18 tests) 40ms
+ ✓ test/reina/governor.test.ts (13 tests) 73ms
+ ✓ test/atlas/canonical.test.ts (9 tests) 43ms
+ ✓ test/security/isa-x.handshake.test.ts (6 tests) 121ms
+ ✓ test/skills/skill-evidence-guard.test.ts (9 tests) 37ms
+ ❯ test/deployment/env-documentation.test.ts (1 test | 1 failed) 185ms
+   ❯ environment variable documentation (1)
+     × documents every variable read through process.env or authorizeApiToken 181ms
+ ✓ test/observability/alert-evaluation.test.ts (11 tests) 174ms
+ ✓ test/ingress/idempotency.test.ts (6 tests) 49ms
+ ✓ test/companion/moe-ui-truth.test.ts (3 tests) 12ms
+ ✓ test/gifts/clarify-engine.test.ts (3 tests) 20ms
+ ✓ test/governance/deployment-verifier.test.ts (9 tests) 17ms
+ ✓ test/routes/native-engines.test.ts (6 tests) 40ms
+ ✓ test/deployment/openapi-contract.test.ts (2 tests) 18ms
+ ✓ test/ihec/gifts.test.ts (11 tests) 37ms
+ ✓ test/performance/hypercore-turbo.test.ts (12 tests) 133ms
+ ✓ test/inference/context-budget.test.ts (11 tests) 33ms
+ ✓ test/memory-proposals.test.ts (3 tests) 36ms
+ ✓ test/omega/territory.test.ts (6 tests) 28ms
+ ✓ test/deployment/workflow-contract.test.ts (8 tests) 65ms
+ ✓ test/identity/approval.test.ts (5 tests) 78ms
+ ✓ test/isabellaEngine.test.ts (4 tests) 29ms
+ ✓ test/routes/hf-hub.test.ts (9 tests) 51ms
+ ✓ test/economy/sovereign-revenue-fabric.test.ts (8 tests) 48ms
+ ✓ test/messaging/runtime-integration.test.ts (2 tests) 78ms
+ ✓ test/http/error-response.test.ts (8 tests) 27ms
+ ✓ test/osiris/detection.test.ts (10 tests) 19ms
+ ✓ test/memory/executive-tactical-memory.test.ts (9 tests) 35ms
+ ✓ test/civilization/layers.test.ts (5 tests) 17ms
+ ✓ test/music/providers.test.ts (4 tests) 17ms
+ ✓ test/core/invariants.test.ts (4 tests) 16ms
+ ✓ test/inference/cost-budget.test.ts (8 tests) 21ms
+ ✓ test/security/http-hardening.test.ts (9 tests) 41ms
+ ✓ test/tts/streaming.test.ts (11 tests) 29ms
+ ✓ test/commerce/subscriptions.test.ts (10 tests) 30ms
+ ✓ test/inference/local-engine-traces.test.ts (5 tests) 25ms
+ ✓ test/routes/treasury.test.ts (9 tests) 82ms
+ ✓ test/routes/traffic-light.test.ts (5 tests) 19ms
+ ✓ test/crown/capability.test.ts (8 tests) 168ms
+ ✓ test/skills/triangulation.test.ts (7 tests) 39ms
+ ✓ test/pipeline/routing-guard.test.ts (6 tests) 90ms
+ ✓ test/economy/reconciliation.test.ts (6 tests) 206ms
+ ✓ test/governance/lsp-validation.test.ts (3 tests) 186ms
+ ✓ test/osiris/sentinel.test.ts (5 tests) 200ms
+ ✓ test/security/key-hierarchy.test.ts (4 tests) 68ms
+ ✓ test/gifts/self-consistency.test.ts (3 tests) 237ms
+ ✓ test/ihec/immune-system.test.ts (6 tests) 496ms
+   ✓ IHEC Cognitive Immune System (6)
+     ✓ reports and resolves crises with antibodies 341ms
+ ✓ test/ingress/trace.test.ts (5 tests) 163ms
+ ✓ test/hf-hub/ingest.test.ts (5 tests) 43ms
+ ✓ test/omega/native-convergence.test.ts (6 tests) 88ms
+ ✓ test/cognition/genesis-chunk.test.ts (7 tests) 107ms
+ ✓ test/native-ml/moe-artifact.test.ts (6 tests) 59ms
+ ✓ test/omega/omega.test.ts (14 tests) 96ms
+ ✓ test/customization/marketplace.test.ts (10 tests) 76ms
+ ✓ test/inference/cognition-cache-key.test.ts (3 tests) 88ms
+ ✓ test/knowledge-entry.test.ts (4 tests) 80ms
+ ✓ test/cognition/native-comprehension.test.ts (5 tests) 43ms
+ ✓ test/provider-policy.test.ts (7 tests) 54ms
+ ✓ test/bookpi/retention.test.ts (6 tests) 104ms
+ ✓ test/governance/evidence-manifest.test.ts (4 tests) 46ms
+ ✓ test/gameover/passport-authority.test.ts (7 tests) 64ms
+ ✓ test/crown/intent.test.ts (7 tests) 36ms
+ ✓ test/skills/catalog-coherence.test.ts (8 tests) 69ms
+ ✓ test/modules/registry.test.ts (4 tests) 35ms
+ ✓ test/hypercore/speculative-draft-engine.test.ts (3 tests) 19ms
+ ✓ test/economy/revenue-fabric/immutable-ledger-policy.test.ts (3 tests) 63ms
+ ✓ test/gifts/latency-budget.test.ts (3 tests) 42ms
+ ✓ test/governance/incident.test.ts (6 tests) 81ms
+ ✓ test/governance/knowledge-entry.test.ts (5 tests) 43ms
+ ✓ test/health/preflight.test.ts (7 tests) 129ms
+ ✓ test/gameover/ethics-engine.test.ts (5 tests) 60ms
+ ✓ test/security/durable-store-migrations.test.ts (6 tests) 54ms
+ ✓ test/inference/local-fast-lane.test.ts (8 tests) 66ms
+ ✓ test/commerce/provider-events.test.ts (12 tests) 150ms
+ ✓ test/routes/economy.test.ts (7 tests) 99ms
+ ✓ test/inference/local-engine.test.ts (6 tests) 130ms
+ ✓ test/gifts/friction-analytics.test.ts (4 tests) 44ms
+ ✓ test/economy/dynamic-pricing.test.ts (4 tests) 40ms
+ ✓ test/commerce/guards.test.ts (10 tests) 45ms
+ ✓ test/agents/math.test.ts (5 tests) 64ms
+ ✓ test/nexus/quantum.test.ts (6 tests) 220ms
+ ✓ test/omega/twins.test.ts (7 tests) 113ms
+ ✓ test/routes/yun-events.test.ts (4 tests) 98ms
+ ✓ test/omega/research.test.ts (10 tests) 179ms
+ ✓ test/routes/marketplace.test.ts (12 tests) 200ms
+ ✓ test/omega/trust.test.ts (7 tests) 102ms
+ ✓ test/security/rate-limit.test.ts (6 tests) 132ms
+ ✓ test/security/nonce.test.ts (6 tests) 185ms
+ ✓ test/economy/revenue-fabric/normalized-settlement-policy.test.ts (8 tests) 64ms
+ ✓ test/inference/provider-policy.test.ts (8 tests) 94ms
+ ✓ test/security/isa-x.protocol.test.ts (6 tests) 51ms
+ ✓ test/territory/tamv-integration.test.ts (4 tests) 36ms
+ ✓ test/routes/document-seal.test.ts (7 tests) 100ms
+ ✓ test/routes/learning-train-disclosure.test.ts (3 tests) 53ms
+ ✓ test/skills/canonical-json.test.ts (7 tests) 146ms
+ ✓ test/security/chat-link-safety.test.ts (4 tests) 82ms
+ ✓ test/federation/registry.test.ts (4 tests) 41ms
+ ✓ test/routes/agents-mesh.test.ts (6 tests) 95ms
+ ✓ test/routes/openai-compat.test.ts (5 tests) 74ms
+ ✓ test/skills/schema-validator.test.ts (7 tests) 282ms
+ ✓ test/skills/crown-policy.test.ts (5 tests) 380ms
+ ✓ test/security/output-guard-live.test.ts (3 tests) 79ms
+ ✓ test/infinity/design-i18n-a11y.test.ts (9 tests) 227ms
+ ✓ test/linguistics/core.test.ts (4 tests) 296ms
+ ✓ test/messaging/magpie.test.ts (5 tests) 534ms
+   ✓ MAGPIE-X governed event bus (5)
+     ✓ delivers to topic subscribers in subscription order 369ms
+ ✓ test/memory/bm25.test.ts (6 tests) 326ms
+ ✓ test/isabella/library.test.ts (3 tests) 47ms
+ ✓ test/native-ml/sovereign-core.test.ts (3 tests) 108ms
+ ✓ test/ingress/admission.test.ts (4 tests) 35ms
+ ✓ test/omega-runtime/text.test.ts (7 tests) 57ms
+ ✓ test/omega/nexus.test.ts (6 tests) 98ms
+ ✓ test/music/agent.test.ts (6 tests) 153ms
+ ✓ test/ingress/webhook-inbox.test.ts (5 tests) 76ms
+ ✓ test/native-ml/sovereign-core-confidence.test.ts (3 tests) 51ms
+ ✓ test/intelligence/adaptive-router.test.ts (5 tests) 66ms
+ ✓ test/memory/temporal-cognition.test.ts (6 tests) 84ms
+ ✓ test/nexus/antifragile.test.ts (4 tests) 109ms
+ ✓ test/observability/metrics.test.ts (4 tests) 94ms
+ ✓ test/memory/ikes-migration.test.ts (3 tests) 50ms
+ ✓ test/protocols/registry.test.ts (5 tests) 104ms
+ ✓ test/inference/rag.test.ts (2 tests) 39ms
+ ✓ test/inference/runtime.test.ts (1 test) 26ms
+ ✓ test/http/static-assets.test.ts (5 tests) 88ms
+ ✓ test/yun-event.test.ts (5 tests) 161ms
+ ✓ test/authority/method-id.test.ts (12 tests) 322ms
+ ✓ test/cognition/epistemic-evaluator.test.ts (7 tests) 131ms
+ ✓ test/governance/lifecycle.test.ts (7 tests) 38ms
+ ✓ test/pennylane-bridge.test.ts (3 tests) 36ms
+ ✓ test/customization/registry.test.ts (6 tests) 49ms
+ ✓ test/gifts/refusal-remediation.test.ts (3 tests) 54ms
+ ✓ test/civilization/evidence-graph.test.ts (5 tests) 54ms
+ ✓ test/inference/cache.test.ts (5 tests) 114ms
+ ✓ test/governance/constitutional-governance-fabric.test.ts (7 tests) 49ms
+ ✓ test/deployment/k8s-manifests.test.ts (5 tests) 57ms
+ ✓ test/creator-identity.test.ts (5 tests) 50ms
+ ✓ test/hypercore/turbo-optimizer.test.ts (6 tests) 125ms
+ ✓ test/commerce/revenue-share.test.ts (6 tests) 64ms
+ ✓ test/hf-hub/client.test.ts (6 tests) 122ms
+ ✓ test/civilization/contract.test.ts (6 tests) 53ms
+ ✓ test/atlas/hcu-store.test.ts (2 tests) 49ms
+ ✓ test/database/postgres-connect-timeout.test.ts (5 tests) 31ms
+ ✓ test/inference/perplexity-router-policy.test.ts (4 tests) 84ms
+ ✓ test/gameover/validator.test.ts (6 tests) 35ms
+ ✓ test/hypercore/context-compiler.test.ts (4 tests) 75ms
+ ✓ test/bookpi/anchor.test.ts (6 tests) 54ms
+ ✓ test/governance/quality-gates.test.ts (3 tests) 53ms
+ ✓ test/commerce/anti-fraud.test.ts (7 tests) 96ms
+ ✓ test/http/default-rate-limit.test.ts (8 tests) 49ms
+ ✓ test/identity/pdp.test.ts (10 tests) 137ms
+ ✓ test/gifts/intent-compiler.test.ts (3 tests) 103ms
+ ✓ test/core/cognitive-fabric-engine.test.ts (5 tests) 66ms
+ ✓ test/fabric/citemesh.test.ts (5 tests) 54ms
+ ✓ test/gifts/earned-trust.test.ts (4 tests) 43ms
+ ✓ test/deployment/integration-graph.test.ts (5 tests) 41ms
+ ✓ test/hypercore/hyperpredict.test.ts (5 tests) 92ms
+ ✓ test/evolution/hypercore.test.ts (6 tests) 34ms
+ ✓ test/civilization/gifts.test.ts (5 tests) 67ms
+ ✓ test/commerce/revenue.test.ts (7 tests) 37ms
+ ✓ test/identity/rbac.test.ts (4 tests) 25ms
+ ✓ test/hypercore/veritas-omega.test.ts (6 tests) 44ms
+ ✓ test/governance/git-governance.test.ts (4 tests) 28ms
+ ✓ test/hypercore/adaptive-model-router.test.ts (3 tests) 53ms
+ ✓ test/deployment/ttl-single-flight.test.ts (3 tests) 32ms
+ ✓ test/gifts/model-selector.test.ts (3 tests) 33ms
+ ✓ test/commerce/plans.test.ts (7 tests) 29ms
+ ✓ test/commerce/webhook.test.ts (8 tests) 50ms
+ ✓ test/inference/fail-closed.test.ts (1 test) 24ms
+ ✓ test/economy/monetization-engine.test.ts (6 tests) 37ms
+ ✓ test/security/jwt-allowlist.test.ts (6 tests) 46ms
+ ✓ test/economy/cognitive-capital-market.test.ts (4 tests) 36ms
+ ✓ test/companion/escalation.test.ts (1 test) 25ms
+ ✓ test/cognition/explainability.test.ts (1 test) 28ms
+ ✓ test/gameover/cognitive-court.test.ts (5 tests) 20ms
+ ✓ test/territory/context.test.ts (1 test) 23ms
+ ✓ test/hypercore/cee.test.ts (4 tests) 22ms
+ ✓ test/inference/guardrails.test.ts (2 tests) 33ms
+ ✓ test/cognition/genesis-moe.test.ts (4 tests) 96ms
+ ✓ test/gameover/risk-engine.test.ts (6 tests) 30ms
+ ✓ test/cognition/contradiction.test.ts (4 tests) 30ms
+ ✓ test/atlas/hcu-simulation.test.ts (3 tests) 20ms
+ ✓ test/companion/ui-context-guard.test.ts (6 tests) 33ms
+ ✓ test/deployment/latency-metrics.test.ts (3 tests) 32ms
+ ✓ test/isabella-engine-skills.test.ts (1 test) 26ms
+ ✓ test/bookpi/readiness.test.ts (4 tests) 58ms
+ ✓ test/xr/safety.test.ts (1 test) 24ms
+ ✓ test/routes/revenue-fabric-idempotency.test.ts (2 tests) 67ms
+ ✓ test/cognition/consent.test.ts (1 test) 36ms
+ ✓ test/authority/governance-method-ids.test.ts (5 tests) 73ms
+ ✓ test/gifts/provider-breaker.test.ts (2 tests) 66ms
+ ✓ test/routes/turbo-planner.test.ts (5 tests) 54ms
+ ✓ test/veritas/verifier.test.ts (1 test) 44ms
+ ✓ test/bookpi/postgres-migration.test.ts (3 tests) 47ms
+ ✓ test/isabella-agentic-world.test.ts (4 tests) 43ms
+ ✓ test/cognition/emotional-trace.test.ts (1 test) 25ms
+ ✓ test/memory/provenance.test.ts (1 test) 70ms
+ ✓ test/governance/bookpi-ledger.test.ts (3 tests) 39ms
+ ✓ test/cognition/experts.test.ts (2 tests) 25ms
+ ✓ test/cognition/sophia.test.ts (4 tests) 81ms
+ ✓ test/gameover/trust-engine.test.ts (4 tests) 22ms
+ ✓ test/pidReconciler.test.ts (3 tests) 80ms
+ ✓ test/memory/vector.test.ts (1 test) 76ms
+ ✓ test/inference/cognition-route-cache.test.ts (3 tests) 62ms
+ ✓ test/gifts/policy-simulator.test.ts (3 tests) 126ms
+ ✓ test/deployment/readiness.test.ts (1 test) 82ms
+ ✓ test/security/route-gate-wiring.test.ts (2 tests) 18ms
+ ✓ test/security/api-token.test.ts (2 tests) 97ms
+ ✓ test/deployment/canary.test.ts (1 test) 22ms
+ ✓ test/companion/safety.test.ts (3 tests) 42ms
+ ✓ test/cognition/orchestrator.test.ts (1 test) 13ms
+ ✓ test/hypercore/barrel.test.ts (2 tests) 18ms
+
+ Test Files  3 failed | 402 passed (405)
+      Tests  3 failed | 2907 passed (2910)
+   Start at  04:07:40
+   Duration  329.91s (tests 36%, import 32%, transform 20%, worker 12%)
+
+    Isolate  405 workers spawned · ~1.38s startup each (spawn + environment, per file)
+             at least ~184.41s faster with isolate: false — reuses workers across files instead of one per file
+
+ENV_EXAMPLE_FAILED
+ - undocumented variables read in src/: API_KEY, FAL_ACE_STEP_MODEL, FAL_KEY, HUGGINGFACEHUB_API_TOKEN, HUGGINGFACE_MUSIC_MODEL, LOCAL_MUSIC_API_KEY, LOCAL_MUSIC_API_URL, LOCAL_MUSIC_MODEL, MUSIC_PROVIDER, REPLICATE_ACE_STEP_MODEL, REPLICATE_API_TOKEN, SUNO_API_URL
+stderr | test/security/postgres-api-key-persistence.test.ts > PostgresApiKeyPersistence > keeps flush failures visible without breaking authentication
+[Isabella] API key lastUsedAt flush failed { message: 'deadlock detected' }
+
+stderr | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.095Z] [WARN] Provider failed: a {"error":"a_DOWN"}
+
+stderr | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.104Z] [WARN] Provider failed: b {"error":"b_DOWN"}
+
+stderr | test/inference/free-providers.test.ts > free provider router > returns the first provider that succeeds, in registration order
+[2026-11-12T10:09:25.121Z] [WARN] Provider failed: first {"error":"first_DOWN"}
+
+stderr | test/atlasPersistence.test.ts > AtlasStore persistence port > publishes XR events to persistence and isolates listener failures
+[AtlasStore] XR listener error: Error: listener failure
+    at C:/Users/tamvo/Downloads/isabella-anubis/test/atlasPersistence.test.ts:52:35
+    at C:/Users/tamvo/Downloads/isabella-anubis/src/atlas/persistence.ts:277:9
+    at Set.forEach (<anonymous>)
+    at AtlasStore.publishXrEvent (C:/Users/tamvo/Downloads/isabella-anubis/src/atlas/persistence.ts:275:22)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at C:/Users/tamvo/Downloads/isabella-anubis/test/atlasPersistence.test.ts:55:19
+    at file:///C:/Users/tamvo/Downloads/isabella-anubis/node_modules/.pnpm/vitest@5.0.5_@types+node@22_f41f85b58050c4298cfaf3758e7825ef/node_modules/vitest/dist/chunks/run.BPv-BBRv.js:2801:20
+
+stderr | test/federation/connectors.test.ts > native federation connectors > degrades to process-local state when hydration fails
+[Isabella] Federation hydration failed; state stays process-local until retry { message: 'connection refused', attempt: 1 }
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/deployment/env-documentation.test.ts > environment variable documentation > documents every variable read through process.env or authorizeApiToken
+AssertionError: expected [ 'FAL_ACE_STEP_MODEL', …(10) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "FAL_ACE_STEP_MODEL",
++   "FAL_KEY",
++   "HUGGINGFACEHUB_API_TOKEN",
++   "HUGGINGFACE_MUSIC_MODEL",
++   "LOCAL_MUSIC_API_KEY",
++   "LOCAL_MUSIC_API_URL",
++   "LOCAL_MUSIC_MODEL",
++   "MUSIC_PROVIDER",
++   "REPLICATE_ACE_STEP_MODEL",
++   "REPLICATE_API_TOKEN",
++   "SUNO_API_URL",
++ ]
+
+ ❯ test/deployment/env-documentation.test.ts:22:26
+     20|     names.delete("");
+     21|     const undocumented = [...names].filter((n) => !example.includes(n)…
+     22|     expect(undocumented).toEqual([]);
+       |                          ^
+     23|   });
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/deployment/hardening-guards.test.ts > operational hardening guards > .env.example has no duplicated keys, real-looking secrets or undocumented variables
+Error: Command failed: C:\Program Files\nodejs\node.exe scripts/check-env-example.mjs
+ENV_EXAMPLE_FAILED
+ - undocumented variables read in src/: API_KEY, FAL_ACE_STEP_MODEL, FAL_KEY, HUGGINGFACEHUB_API_TOKEN, HUGGINGFACE_MUSIC_MODEL, LOCAL_MUSIC_API_KEY, LOCAL_MUSIC_API_URL, LOCAL_MUSIC_MODEL, MUSIC_PROVIDER, REPLICATE_ACE_STEP_MODEL, REPLICATE_API_TOKEN, SUNO_API_URL
+
+ ❯ run test/deployment/hardening-guards.test.ts:7:3
+      5| const read = (p: string): string => readFileSync(p, "utf8");
+      6| const run = (script: string, ...args: string[]): string =>
+      7|   execFileSync(process.execPath, [script, ...args], { encoding: "utf8"…
+       |   ^
+      8|
+      9| describe("operational hardening guards", () => {
+ ❯ test/deployment/hardening-guards.test.ts:28:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/deployment/readiness-consistency.test.ts > production-readiness reporting is evidence-based > the README publishes only the global percentage the instrument computes
+AssertionError: expected '# Isabella Villaseñor AI — Génesis Ω∞…' to contain 'AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIE…'
+
+- Expected
++ Received
+
+- AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIEGUE=20.1%
++ # Isabella Villaseñor AI — Génesis Ω∞ · Terminus V6 · TAMV ONLINE NETWORK
++
++ Isabella es un **Runtime Web Operativo y Sistema Federado de Inteligencia Artificial Gobernada (FGAIS)** construido, propiedad y creado por **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)** bajo la marca **TAMV ONLINE ENTERPRISE**. No es un chatbot: es un runtime con gobernanza determinista, memoria jerárquica, un motor de inferencia propio que **orquesta** LLM externos (no es un modelo fundacional entrenado por TAMV), RAG soberano, herramientas allowlisted, habilidades ejecutables, auditoría criptográfica y un sistema nativo de análisis audio-espectral en tiempo real: el **TAMV Kaos Audio System**.
++
++ > Estado del repositorio: `draft | engine-generated` hasta revisión humana nominal. No se declara conciencia, autonomía jurídica ni autoridad propia.
++ >
++ > Propiedad y uso: ver [`LICENSE`](LICENSE) y [`NOTICE.md`](NOTICE.md). La licencia publicada es **propietaria, con todos los derechos reservados**.
++
++ ## Contrato de evidencia
++
++ ```text
++ SPECIFIED ≠ IMPLEMENTED ≠ TESTED ≠ PRODUCTION
++ CAPABILITY ≠ AUTHORITY ≠ EXECUTION ≠ EVIDENCE
++ ```
++
++ Ningún documento, tabla o respuesta de API puede elevar una categoría a otra. El inventario de rutas (`docs/api/route-inventory.json`), el canon Ω∞ (`src/platform/omega-canon.ts`) y las auditorías de `src/infinity/` declaran la madurez real de cada capacidad, y hay pruebas que fallan si una cifra inventada reaparece.
++
++ ## Superficie HTTP (339 rutas registradas)
++
++ ### Gobernanza y runtime
++ - `GET /api/v1/nexus`, `GET /api/v1/nexus/health` — runtime Nexus (grafo, agente, workflows, cuántica local).
++ - `GET /api/v1/status`, `GET /api/v1/readyz` — readiness y salud de dependencias.
++ - `GET /api/v1/ops/preflight` — preflight de configuración (token-gated).
++
++ ### Agent Mesh ISABELLA CERO (fusión 2026-11-01)
++ - `GET /api/v1/agents/mesh` — matriz de 10 roles (`planner, researcher, architect, coder, tester, reviewer, security, devops, creative, operator`).
++ - `POST /api/v1/agents/mesh/evaluate` — evaluación `ALLOW/DENY/ESCALATE`. `executionPerformed` siempre `false`; la aprobación se deriva de un bearer administrativo verificado en el servidor, nunca del cuerpo HTTP.
++
++ ### ISABELLA VILLASEÑOR AI™ — Master Consolidated (`src/infinity/`)
++ - `GET /api/v1/infinity` — resumen, catálogo, skills, media, build, evolución, design tokens, i18n, accesibilidad y auditoría.
++ - `POST /api/v1/infinity/constitution/evaluate` — evalúa `ALLOW/DENY`; no autoriza.
++ - `POST /api/v1/infinity/skills/run` — ejecuta una de las 10 skills nativas deterministas (sin red, `externalCalls: 0`).
++ - `POST /api/v1/infinity/media/evaluate` — media sin modificar píxeles ni usar la red (cull, estilo, retoque, galería, cotización, face-index + aliases Aftershoot).
++ - `POST /api/v1/infinity/build/plan` — plan de workspace/sandbox/preview/deploy; no ejecuta ni despliega.
++ - `POST /api/v1/infinity/evolution/evolve` — simulación de evolución en memoria (cápsulas, GDI, A2A).
++ - `POST /api/v1/infinity/a2a/evaluate` — evalúa verbos A2A (`describe, propose, evaluate, adopt`).
++ - `POST /api/v1/infinity/primitives/run` — planificación de suites de prueba (`runTests`), sin ejecución.
++ - `POST /api/v1/infinity/design-tokens` — genera tokens CSS/JSON para 6 paletas (neutral, stone, gothic, matcha, butter, y2k); no aplica a la UI.
++ - `POST /api/v1/infinity/i18n/translate` — traducción determinista (es-MX nativo, es-ES, en, pt-BR).
++ - `POST /api/v1/infinity/accessibility/evaluate` — checklist a11y declarativo (8 checks), sin auditar el DOM.
++
++ Todas las respuestas declaran `production: false` y `executionPerformed: false`.
++
++ ### TAMV Kaos Audio System
++ - Prefijo `/api/v1/tamv`. Autorización POST vía `GENESIS_ADMIN_API_TOKEN`, rate limit 8 req/60 s, ledger BookPI, blackout `VOICE_SYNTHESIS`.
++ - `GET /api/v1/tamv/status`, `GET /api/v1/tamv/presets`, `GET /api/v1/tamv/presets/:presetId`
++ - `POST /api/v1/tamv/analyze`, `POST /api/v1/tamv/adaptive-preset`, `POST /api/v1/tamv/redefine-plan`
++
++ DSP nativo en TypeScript (FFT radix-2, centroide, flatness, bandas, transitorios, estéreo M/S, niveles). No reproduce, no sintetiza, no separa fuentes. 11 presets, 8 etapas de redefinición con 15 puertas de validación, 10 lecturas de telemetría (4 de hardware declaradas como `measured: false`).
++
++ ## Arquitectura
++
++ ### 14 capas Ω + 9 Fabrics (`src/infinity/architecture.ts`)
++ Capas: Ω-0 (Client Channels), Ω-0.5 (API Gateway), Ω-1 (Memory Mesh/YUN), Ω-2 (Digital Twin), Ω-3 (Knowledge Graph), Ω-5 (Science Engine), Ω-6 (Governance/CROWN), Ω-7 (EFM-CCI/BookPI), Ω-8 (Reasoning Mesh), Ω-9 (CM-ET), Ω-10 (Identity & Ethics/EOCT), Ω-12 (AA-CD), Ω-13 (IHEC), Ω-14 (Evolutionary Crisis Memory).
++
++ Fabrics: Cognition, Memory, Agent, Governance, Model, MCP, Evolution, Build, BookPI.
++
++ ### Catálogo integral (`src/infinity/catalog.ts`)
++ - 10 skills nativas
++ - 18 tools (la tabla del canon enumera 18; su resumen dice 19 — se documenta la divergencia)
++ - 14 primitivas
++ - 12 servicios
++ - Total: 54 entradas, todas con madurez y evidencia; ninguna declara `production`.
++
++ ### Constitución (`src/infinity/constitution.ts`)
++ ```text
++ ALLOW = IDENTITY × AUTHORITY × POLICY × EVIDENCE × SAFETY
++ ```
++ - `SUPPLANTAR`, `FRAUDE`, `ACCESO NO AUTORIZADO`, `DESTRUCCIÓN DE EVIDENCIA` → DENY siempre.
++ - `deploy` y `payment` exigen aprobación humana verificada en el servidor.
++ - Ingesta de 14 etapas → `ADMIT`, `REJECT` o `QUARANTINE`.
++ - `APRENDER ≠ COPIAR`, `≠ INGERIR SIN PERMISO`, `≠ ENTRENAR SIN LICENCIA`.
++ - `calculateTrust()` es asesor y devuelve `authorizes: false`.
++
++ ## Gobernanza
++
++ - **CROWN** (`src/omega-runtime`, `src/nexus`): policy, risk, compliance.
++ - **BookPI** (`src/bookpi`): evidencia criptográfica SHA3-512, append-only.
++ - **Blackout**: alcance `VOICE_SYNTHESIS` en `src/governance/blackout.ts`.
++ - **MCP fail-closed**: sin `MCP_SERVER_TOKEN` no se exponen herramientas.
++ - **Profit Guard** (`src/economy/profit-guard.ts`): `minimumProfitablePrice(cost, marginBps)` = `cost * (1 + marginBps/10000)` redondeado a centavos. Nunca por debajo del costo.
++ - **Sandbox** (`src/agents/sandbox.ts`): `path.relative`, rechaza `..`, rutas absolutas, NUL y symlinks; límites de tamaño; SHA3-512.
++
++ ## Memoria y persistencia
++
++ - **IKES** (`src/ikes`): hidratación hash-validada, fail-closed, auto-reparación con backoff exponencial (5 s → 60 s), timer `unref`.
++ - **Almacenes durables** (`src/security/isabella-api-keys.ts`, `src/federation/connectors.ts`): Postgres/Neon, escritura por fila, fallo visible (no silencioso), log `hydration recovered`.
++ - **Ledger legacy BookPI**: `VOLATILE_IN_MEMORY`, `/api/v1/readyz` = 503 hasta refactor asíncrono.
++
++ ## Infraestructura
++
++ - **Vercel**: framework `null`, single function `api/index.js` → `dist/server.js`, `includeFiles: {dist/**, src/ui/**, src/assets/video/**}`, `maxDuration: 300`.
++ - **Postgres**: connect timeout 10 s por defecto.
++ - **IKES Supabase**: request timeout 10 s, readiness hydration 5 s, self-healing retry 30 s.
++
++ ## Verificación
++
++ ```bash
++ pnpm typecheck          # tsc --noEmit
++ pnpm typecheck:layers   # tsc -p tsconfig.layers.json
++ pnpm test               # vitest run (397 archivos / 2843 pruebas)
++ pnpm lint               # eslint src/** --max-warnings 0
++ pnpm build:dist         # tsc + esbuild + node --check
++ node scripts/repository-assurance.mjs  # 44/44 gates
++ ```
++
++ ## Evidencia actual
++
++ Avance global de implementación: no publicado como porcentaje único. Mientras no exista un denominador de requisitos ponderados y reproducible, una cifra agregada sería especulación y no se presenta como hecho.
++
++ - **397 archivos de prueba / 2843 pruebas verdes**.
++ - `tsc --noEmit` = 0, `tsc -p tsconfig.layers.json` = 0.
++ - ESLint 0 warnings, Prettier limpio en archivos nuevos.
++ - Build: 2.6 MB, `node --check` OK.
++ - Repository assurance: 44/44 gates PASS.
++ - Deploy Vercel: alias `isabella-terminus-v6-tamvonlinenetwork.vercel.app` (auto-deploy desde `main`).
++
++ ## Bloqueadores conocidos (no ocultos)
++
++ - `PF-STRIPE-WEBHOOK-MISSING`, `PF-STRIPE-TEST-KEY` — requieren Stripe dashboard/live key.
++ - Dominio custom `isabella-ai.visitarealdelmonte.online` no resuelve ni está en el team.
++ - Migraciones Supabase/Neon con `grant ... to service_role` no aplicables en Neon.
++ - `OTEL_EXPORTER_OTLP_ENDPOINT` ausente → observabilidad degradada.
++ - Backup/restore, RLS bajo service role, concurrencia, rollback no demostrados.
++ - 4 vulnerabilidades moderadas de Dependabot.
++ - Ciclo completo fallo→recuperación de almacenes durables no observado en producción real.
++
++ ## Estructura del repositorio
++
++ ```
++ src/
++   agents/          # Agent Mesh CERO + sandbox endurecido
++   infinity/        # Master Consolidated fusion (14 capas, 9 fabrics, constitución, skills, media, build, evolution, design-tokens, i18n, a11y)
++   routes/          # Superficies HTTP (agents-mesh, infinity, nexus, platform, ...)
++   server.ts        # Composición del runtime
++   economy/         # Profit Guard, revenue fabric
++   health/          # Readiness, deploy-readiness, preflight
++   ikes/            # Memoria verificada
++   memory/          # Memory mesh
++   nexus/           # Capa unificada de capacidades locales
++   tamv/            # Kaos Audio System
++   tools/           # Catálogo de herramientas allowlisted
++   ui/              # Frontend (app.js)
++ docs/
++   canon/           # Documentos canónicos importados con SHA-256
++   infinity/        # Mapa operativo de la fusión Master Consolidated
++   rfc/             # RFC-0001..0012
++   api/             # Inventario de rutas (339)
++ tests/             # 397 archivos, 2843 pruebas
++ ```
++
++ ## Licencia
++
++ Propietaria, todos los derechos reservados. Ver [`LICENSE`](LICENSE) y [`NOTICE.md`](NOTICE.md). Los documentos canónicos importados conservan su procedencia y **no relicencian** este repositorio.
++
++ ---
++
++ *Estado actualizado: 11 de noviembre de 2026. `engine-generated` — revisión humana pendiente.*
+
+ ❯ test/deployment/readiness-consistency.test.ts:23:20
+     21|     expect(printed, 'production-progress.mjs no emitió el porcentaje')…
+     22|
+     23|     expect(readme).toContain(`AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIEGUE…
+       |                    ^
+     24|     expect(readme).toMatch(/cuatro ejes con peso declarado/);
+     25|     expect(readme).toMatch(/docs\/status\/production-progress-evidence…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+Command failed: node node_modules/vitest/vitest.mjs run
+ENV_EXAMPLE_FAILED
+ - undocumented variables read in src/: API_KEY, FAL_ACE_STEP_MODEL, FAL_KEY, HUGGINGFACEHUB_API_TOKEN, HUGGINGFACE_MUSIC_MODEL, LOCAL_MUSIC_API_KEY, LOCAL_MUSIC_API_URL, LOCAL_MUSIC_MODEL, MUSIC_PROVIDER, REPLICATE_ACE_STEP_MODEL, REPLICATE_API_TOKEN, SUNO_API_URL
+stderr | test/security/postgres-api-key-persistence.test.ts > PostgresApiKeyPersistence > keeps flush failures visible without breaking authentication
+[Isabella] API key lastUsedAt flush failed { message: 'deadlock detected' }
+
+stderr | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.095Z] [WARN] Provider failed: a {"error":"a_DOWN"}
+
+stderr | test/inference/free-providers.test.ts > free provider router > fails closed when every provider is unavailable
+[2026-11-12T10:09:25.104Z] [WARN] Provider failed: b {"error":"b_DOWN"}
+
+stderr | test/inference/free-providers.test.ts > free provider router > returns the first provider that succeeds, in registration order
+[2026-11-12T10:09:25.121Z] [WARN] Provider failed: first {"error":"first_DOWN"}
+
+stderr | test/atlasPersistence.test.ts > AtlasStore persistence port > publishes XR events to persistence and isolates listener failures
+[AtlasStore] XR listener error: Error: listener failure
+    at C:/Users/tamvo/Downloads/isabella-anubis/test/atlasPersistence.test.ts:52:35
+    at C:/Users/tamvo/Downloads/isabella-anubis/src/atlas/persistence.ts:277:9
+    at Set.forEach (<anonymous>)
+    at AtlasStore.publishXrEvent (C:/Users/tamvo/Downloads/isabella-anubis/src/atlas/persistence.ts:275:22)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at C:/Users/tamvo/Downloads/isabella-anubis/test/atlasPersistence.test.ts:55:19
+    at file:///C:/Users/tamvo/Downloads/isabella-anubis/node_modules/.pnpm/vitest@5.0.5_@types+node@22_f41f85b58050c4298cfaf3758e7825ef/node_modules/vitest/dist/chunks/run.BPv-BBRv.js:2801:20
+
+stderr | test/federation/connectors.test.ts > native federation connectors > degrades to process-local state when hydration fails
+[Isabella] Federation hydration failed; state stays process-local until retry { message: 'connection refused', attempt: 1 }
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/deployment/env-documentation.test.ts > environment variable documentation > documents every variable read through process.env or authorizeApiToken
+AssertionError: expected [ 'FAL_ACE_STEP_MODEL', …(10) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "FAL_ACE_STEP_MODEL",
++   "FAL_KEY",
++   "HUGGINGFACEHUB_API_TOKEN",
++   "HUGGINGFACE_MUSIC_MODEL",
++   "LOCAL_MUSIC_API_KEY",
++   "LOCAL_MUSIC_API_URL",
++   "LOCAL_MUSIC_MODEL",
++   "MUSIC_PROVIDER",
++   "REPLICATE_ACE_STEP_MODEL",
++   "REPLICATE_API_TOKEN",
++   "SUNO_API_URL",
++ ]
+
+ ❯ test/deployment/env-documentation.test.ts:22:26
+     20|     names.delete("");
+     21|     const undocumented = [...names].filter((n) => !example.includes(n)…
+     22|     expect(undocumented).toEqual([]);
+       |                          ^
+     23|   });
+     24| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/deployment/hardening-guards.test.ts > operational hardening guards > .env.example has no duplicated keys, real-looking secrets or undocumented variables
+Error: Command failed: C:\Program Files\nodejs\node.exe scripts/check-env-example.mjs
+ENV_EXAMPLE_FAILED
+ - undocumented variables read in src/: API_KEY, FAL_ACE_STEP_MODEL, FAL_KEY, HUGGINGFACEHUB_API_TOKEN, HUGGINGFACE_MUSIC_MODEL, LOCAL_MUSIC_API_KEY, LOCAL_MUSIC_API_URL, LOCAL_MUSIC_MODEL, MUSIC_PROVIDER, REPLICATE_ACE_STEP_MODEL, REPLICATE_API_TOKEN, SUNO_API_URL
+
+ ❯ run test/deployment/hardening-guards.test.ts:7:3
+      5| const read = (p: string): string => readFileSync(p, "utf8");
+      6| const run = (script: string, ...args: string[]): string =>
+      7|   execFileSync(process.execPath, [script, ...args], { encoding: "utf8"…
+       |   ^
+      8|
+      9| describe("operational hardening guards", () => {
+ ❯ test/deployment/hardening-guards.test.ts:28:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/deployment/readiness-consistency.test.ts > production-readiness reporting is evidence-based > the README publishes only the global percentage the instrument computes
+AssertionError: expected '# Isabella Villaseñor AI — Génesis Ω∞…' to contain 'AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIE…'
+
+- Expected
++ Received
+
+- AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIEGUE=20.1%
++ # Isabella Villaseñor AI — Génesis Ω∞ · Terminus V6 · TAMV ONLINE NETWORK
++
++ Isabella es un **Runtime Web Operativo y Sistema Federado de Inteligencia Artificial Gobernada (FGAIS)** construido, propiedad y creado por **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)** bajo la marca **TAMV ONLINE ENTERPRISE**. No es un chatbot: es un runtime con gobernanza determinista, memoria jerárquica, un motor de inferencia propio que **orquesta** LLM externos (no es un modelo fundacional entrenado por TAMV), RAG soberano, herramientas allowlisted, habilidades ejecutables, auditoría criptográfica y un sistema nativo de análisis audio-espectral en tiempo real: el **TAMV Kaos Audio System**.
++
++ > Estado del repositorio: `draft | engine-generated` hasta revisión humana nominal. No se declara conciencia, autonomía jurídica ni autoridad propia.
++ >
++ > Propiedad y uso: ver [`LICENSE`](LICENSE) y [`NOTICE.md`](NOTICE.md). La licencia publicada es **propietaria, con todos los derechos reservados**.
++
++ ## Contrato de evidencia
++
++ ```text
++ SPECIFIED ≠ IMPLEMENTED ≠ TESTED ≠ PRODUCTION
++ CAPABILITY ≠ AUTHORITY ≠ EXECUTION ≠ EVIDENCE
++ ```
++
++ Ningún documento, tabla o respuesta de API puede elevar una categoría a otra. El inventario de rutas (`docs/api/route-inventory.json`), el canon Ω∞ (`src/platform/omega-canon.ts`) y las auditorías de `src/infinity/` declaran la madurez real de cada capacidad, y hay pruebas que fallan si una cifra inventada reaparece.
++
++ ## Superficie HTTP (339 rutas registradas)
++
++ ### Gobernanza y runtime
++ - `GET /api/v1/nexus`, `GET /api/v1/nexus/health` — runtime Nexus (grafo, agente, workflows, cuántica local).
++ - `GET /api/v1/status`, `GET /api/v1/readyz` — readiness y salud de dependencias.
++ - `GET /api/v1/ops/preflight` — preflight de configuración (token-gated).
++
++ ### Agent Mesh ISABELLA CERO (fusión 2026-11-01)
++ - `GET /api/v1/agents/mesh` — matriz de 10 roles (`planner, researcher, architect, coder, tester, reviewer, security, devops, creative, operator`).
++ - `POST /api/v1/agents/mesh/evaluate` — evaluación `ALLOW/DENY/ESCALATE`. `executionPerformed` siempre `false`; la aprobación se deriva de un bearer administrativo verificado en el servidor, nunca del cuerpo HTTP.
++
++ ### ISABELLA VILLASEÑOR AI™ — Master Consolidated (`src/infinity/`)
++ - `GET /api/v1/infinity` — resumen, catálogo, skills, media, build, evolución, design tokens, i18n, accesibilidad y auditoría.
++ - `POST /api/v1/infinity/constitution/evaluate` — evalúa `ALLOW/DENY`; no autoriza.
++ - `POST /api/v1/infinity/skills/run` — ejecuta una de las 10 skills nativas deterministas (sin red, `externalCalls: 0`).
++ - `POST /api/v1/infinity/media/evaluate` — media sin modificar píxeles ni usar la red (cull, estilo, retoque, galería, cotización, face-index + aliases Aftershoot).
++ - `POST /api/v1/infinity/build/plan` — plan de workspace/sandbox/preview/deploy; no ejecuta ni despliega.
++ - `POST /api/v1/infinity/evolution/evolve` — simulación de evolución en memoria (cápsulas, GDI, A2A).
++ - `POST /api/v1/infinity/a2a/evaluate` — evalúa verbos A2A (`describe, propose, evaluate, adopt`).
++ - `POST /api/v1/infinity/primitives/run` — planificación de suites de prueba (`runTests`), sin ejecución.
++ - `POST /api/v1/infinity/design-tokens` — genera tokens CSS/JSON para 6 paletas (neutral, stone, gothic, matcha, butter, y2k); no aplica a la UI.
++ - `POST /api/v1/infinity/i18n/translate` — traducción determinista (es-MX nativo, es-ES, en, pt-BR).
++ - `POST /api/v1/infinity/accessibility/evaluate` — checklist a11y declarativo (8 checks), sin auditar el DOM.
++
++ Todas las respuestas declaran `production: false` y `executionPerformed: false`.
++
++ ### TAMV Kaos Audio System
++ - Prefijo `/api/v1/tamv`. Autorización POST vía `GENESIS_ADMIN_API_TOKEN`, rate limit 8 req/60 s, ledger BookPI, blackout `VOICE_SYNTHESIS`.
++ - `GET /api/v1/tamv/status`, `GET /api/v1/tamv/presets`, `GET /api/v1/tamv/presets/:presetId`
++ - `POST /api/v1/tamv/analyze`, `POST /api/v1/tamv/adaptive-preset`, `POST /api/v1/tamv/redefine-plan`
++
++ DSP nativo en TypeScript (FFT radix-2, centroide, flatness, bandas, transitorios, estéreo M/S, niveles). No reproduce, no sintetiza, no separa fuentes. 11 presets, 8 etapas de redefinición con 15 puertas de validación, 10 lecturas de telemetría (4 de hardware declaradas como `measured: false`).
++
++ ## Arquitectura
++
++ ### 14 capas Ω + 9 Fabrics (`src/infinity/architecture.ts`)
++ Capas: Ω-0 (Client Channels), Ω-0.5 (API Gateway), Ω-1 (Memory Mesh/YUN), Ω-2 (Digital Twin), Ω-3 (Knowledge Graph), Ω-5 (Science Engine), Ω-6 (Governance/CROWN), Ω-7 (EFM-CCI/BookPI), Ω-8 (Reasoning Mesh), Ω-9 (CM-ET), Ω-10 (Identity & Ethics/EOCT), Ω-12 (AA-CD), Ω-13 (IHEC), Ω-14 (Evolutionary Crisis Memory).
++
++ Fabrics: Cognition, Memory, Agent, Governance, Model, MCP, Evolution, Build, BookPI.
++
++ ### Catálogo integral (`src/infinity/catalog.ts`)
++ - 10 skills nativas
++ - 18 tools (la tabla del canon enumera 18; su resumen dice 19 — se documenta la divergencia)
++ - 14 primitivas
++ - 12 servicios
++ - Total: 54 entradas, todas con madurez y evidencia; ninguna declara `production`.
++
++ ### Constitución (`src/infinity/constitution.ts`)
++ ```text
++ ALLOW = IDENTITY × AUTHORITY × POLICY × EVIDENCE × SAFETY
++ ```
++ - `SUPPLANTAR`, `FRAUDE`, `ACCESO NO AUTORIZADO`, `DESTRUCCIÓN DE EVIDENCIA` → DENY siempre.
++ - `deploy` y `payment` exigen aprobación humana verificada en el servidor.
++ - Ingesta de 14 etapas → `ADMIT`, `REJECT` o `QUARANTINE`.
++ - `APRENDER ≠ COPIAR`, `≠ INGERIR SIN PERMISO`, `≠ ENTRENAR SIN LICENCIA`.
++ - `calculateTrust()` es asesor y devuelve `authorizes: false`.
++
++ ## Gobernanza
++
++ - **CROWN** (`src/omega-runtime`, `src/nexus`): policy, risk, compliance.
++ - **BookPI** (`src/bookpi`): evidencia criptográfica SHA3-512, append-only.
++ - **Blackout**: alcance `VOICE_SYNTHESIS` en `src/governance/blackout.ts`.
++ - **MCP fail-closed**: sin `MCP_SERVER_TOKEN` no se exponen herramientas.
++ - **Profit Guard** (`src/economy/profit-guard.ts`): `minimumProfitablePrice(cost, marginBps)` = `cost * (1 + marginBps/10000)` redondeado a centavos. Nunca por debajo del costo.
++ - **Sandbox** (`src/agents/sandbox.ts`): `path.relative`, rechaza `..`, rutas absolutas, NUL y symlinks; límites de tamaño; SHA3-512.
++
++ ## Memoria y persistencia
++
++ - **IKES** (`src/ikes`): hidratación hash-validada, fail-closed, auto-reparación con backoff exponencial (5 s → 60 s), timer `unref`.
++ - **Almacenes durables** (`src/security/isabella-api-keys.ts`, `src/federation/connectors.ts`): Postgres/Neon, escritura por fila, fallo visible (no silencioso), log `hydration recovered`.
++ - **Ledger legacy BookPI**: `VOLATILE_IN_MEMORY`, `/api/v1/readyz` = 503 hasta refactor asíncrono.
++
++ ## Infraestructura
++
++ - **Vercel**: framework `null`, single function `api/index.js` → `dist/server.js`, `includeFiles: {dist/**, src/ui/**, src/assets/video/**}`, `maxDuration: 300`.
++ - **Postgres**: connect timeout 10 s por defecto.
++ - **IKES Supabase**: request timeout 10 s, readiness hydration 5 s, self-healing retry 30 s.
++
++ ## Verificación
++
++ ```bash
++ pnpm typecheck          # tsc --noEmit
++ pnpm typecheck:layers   # tsc -p tsconfig.layers.json
++ pnpm test               # vitest run (397 archivos / 2843 pruebas)
++ pnpm lint               # eslint src/** --max-warnings 0
++ pnpm build:dist         # tsc + esbuild + node --check
++ node scripts/repository-assurance.mjs  # 44/44 gates
++ ```
++
++ ## Evidencia actual
++
++ Avance global de implementación: no publicado como porcentaje único. Mientras no exista un denominador de requisitos ponderados y reproducible, una cifra agregada sería especulación y no se presenta como hecho.
++
++ - **397 archivos de prueba / 2843 pruebas verdes**.
++ - `tsc --noEmit` = 0, `tsc -p tsconfig.layers.json` = 0.
++ - ESLint 0 warnings, Prettier limpio en archivos nuevos.
++ - Build: 2.6 MB, `node --check` OK.
++ - Repository assurance: 44/44 gates PASS.
++ - Deploy Vercel: alias `isabella-terminus-v6-tamvonlinenetwork.vercel.app` (auto-deploy desde `main`).
++
++ ## Bloqueadores conocidos (no ocultos)
++
++ - `PF-STRIPE-WEBHOOK-MISSING`, `PF-STRIPE-TEST-KEY` — requieren Stripe dashboard/live key.
++ - Dominio custom `isabella-ai.visitarealdelmonte.online` no resuelve ni está en el team.
++ - Migraciones Supabase/Neon con `grant ... to service_role` no aplicables en Neon.
++ - `OTEL_EXPORTER_OTLP_ENDPOINT` ausente → observabilidad degradada.
++ - Backup/restore, RLS bajo service role, concurrencia, rollback no demostrados.
++ - 4 vulnerabilidades moderadas de Dependabot.
++ - Ciclo completo fallo→recuperación de almacenes durables no observado en producción real.
++
++ ## Estructura del repositorio
++
++ ```
++ src/
++   agents/          # Agent Mesh CERO + sandbox endurecido
++   infinity/        # Master Consolidated fusion (14 capas, 9 fabrics, constitución, skills, media, build, evolution, design-tokens, i18n, a11y)
++   routes/          # Superficies HTTP (agents-mesh, infinity, nexus, platform, ...)
++   server.ts        # Composición del runtime
++   economy/         # Profit Guard, revenue fabric
++   health/          # Readiness, deploy-readiness, preflight
++   ikes/            # Memoria verificada
++   memory/          # Memory mesh
++   nexus/           # Capa unificada de capacidades locales
++   tamv/            # Kaos Audio System
++   tools/           # Catálogo de herramientas allowlisted
++   ui/              # Frontend (app.js)
++ docs/
++   canon/           # Documentos canónicos importados con SHA-256
++   infinity/        # Mapa operativo de la fusión Master Consolidated
++   rfc/             # RFC-0001..0012
++   api/             # Inventario de rutas (339)
++ tests/             # 397 archivos, 2843 pruebas
++ ```
++
++ ## Licencia
++
++ Propietaria, todos los derechos reservados. Ver [`LICENSE`](LICENSE) y [`NOTICE.md`](NOTICE.md). Los documentos canónicos importados conservan su procedencia y **no relicencian** este repositorio.
++
++ ---
++
++ *Estado actualizado: 11 de noviembre de 2026. `engine-generated` — revisión humana pendiente.*
+
+ ❯ test/deployment/readiness-consistency.test.ts:23:20
+     21|     expect(printed, 'production-progress.mjs no emitió el porcentaje')…
+     22|
+     23|     expect(readme).toContain(`AVANCE_REAL_GLOBAL_PRODUCCION_DESPLIEGUE…
+       |                    ^
+     24|     expect(readme).toMatch(/cuatro ejes con peso declarado/);
+     25|     expect(readme).toMatch(/docs\/status\/production-progress-evidence…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
